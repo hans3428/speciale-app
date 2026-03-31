@@ -33,57 +33,57 @@ LINE_DF = load_line_data(DATA_PATH)
 GROUPS = {
     "Arbejdsmarked": {
         "Løn": {
-            "question": "Jeg lægger vægt på, at mit fremtidige arbejde giver en høj løn",
+            "question": "Det er vigtigt for mig at have en højere løn end gennemsnittet for kandidater fra min årgang",
             "column": "Løn",
         },
         "Jobsikkerhed": {
-            "question": "Jeg lægger vægt på, at mit fremtidige arbejde giver høj jobsikkerhed",
+            "question": "Det er vigtigt for mig at have lavere risiko for ledighed end gennemsnittet for kandidater fra min årgang",
             "column": "Jobsikkerhed",
         },
         "karakter_avg": {
-            "question": "Jeg trives med høje faglige krav og et højt akademisk niveau",
+            "question": "Det er vigtigt for mig at gå på en uddannelse, hvor studerende i gennemsnit opnår høje karakterer",
             "column": "karakter_avg",
         },
     },
     "Studieform": {
         "Skriftlig": {
-            "question": "Jeg foretrækker skriftlige eksamener frem for andre eksamensformer",
+            "question": "Jeg foretrækker uddannelser med en høj andel af skriftlige eksamener",
             "column": "Skriftlig",
         },
         "Individuel": {
-            "question": "Jeg foretrækker at arbejde individuelt frem for i grupper",
+            "question": "Jeg foretrækker uddannelser, hvor arbejde primært foregår individuelt frem for i grupper",
             "column": "Individuel",
         },
         "timer_ects": {
-            "question": "Jeg foretrækker en uddannelse med mange undervisningstimer og fast struktur",
+            "question": "Jeg foretrækker uddannelser med mange undervisningstimer pr. ECTS-point",
             "column": "timer_ects",
         },
     },
     "Arbejdsstil – kognitiv/performance": {
         "Adaptability": {
-            "question": "Jeg trives med forandringer og tilpasning til nye situationer",
+            "question": "Jeg foretrækker opgaver, hvor krav og rammer ændrer sig løbende",
             "column": "Adaptability",
         },
         "AttentiontoDetail": {
-            "question": "Jeg arbejder grundigt og detaljeorienteret",
+            "question": "Jeg foretrækker opgaver, hvor præcision og detaljer er afgørende",
             "column": "AttentiontoDetail",
         },
         "Initiative": {
-            "question": "Jeg tager ofte initiativ i opgaver og projekter",
+            "question": "Jeg tager ofte selv initiativ til nye opgaver uden at blive bedt om det",
             "column": "Initiative",
         },
     },
     "Arbejdsstil – social/ledelse": {
         "Integrity": {
-            "question": "Det er vigtigt for mig at handle ansvarligt og i overensstemmelse med mine værdier",
+            "question": "Jeg lægger vægt på at overholde regler og aftaler i mit arbejde",
             "column": "Integrity",
         },
         "Empathy": {
-            "question": "Jeg er god til at forstå og tage hensyn til andre menneskers perspektiver",
+            "question": "Jeg tager ofte hensyn til andres perspektiver i mit arbejde",
             "column": "Empathy",
         },
         "LeadershipOrientation": {
-            "question": "Jeg motiveres af at tage lederskab og sætte retning for andre",
+            "question": "Jeg motiveres af at tage ansvar for at lede og koordinere andre",
             "column": "LeadershipOrientation",
         },
     },
