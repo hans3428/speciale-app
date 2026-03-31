@@ -111,6 +111,8 @@ WEIGHT_QUESTIONS = {
     "Faglige interesser": "Hvor vigtigt er det for dig, at linjen matcher dine faglige interesser?",
 }
 
+GROUP_ORDER = list(GROUPS.keys())
+
 
 def response_to_zero_one(value: int) -> float:
     return (value - 1) / 4
@@ -172,15 +174,73 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     return fig
 
 
-def all_questions_answered() -> bool:
-    profile_keys = [
-        f"profile_{key}"
-        for group in GROUPS.values()
-        for key in group.keys()
-    ]
-    weight_keys = [f"weight_{group_name}" for group_name in GROUPS.keys()]
+def init_state():
+    if "page" not in st.session_state:
+        st.session_state.page = "intro"
 
-    return all(st.session_state.get(k) is not None for k in profile_keys + weight_keys)
+    if "step" not in st.session_state:
+        st.session_state.step = 0
+
+
+def go_to_intro():
+    st.session_state.page = "intro"
+    st.session_state.step = 0
+
+
+def go_to_test():
+    st.session_state.page = "test"
+    st.session_state.step = 0
+
+
+def next_step():
+    if st.session_state.step < len(GROUP_ORDER) - 1:
+        st.session_state.step += 1
+    else:
+        st.session_state.page = "result"
+
+
+def prev_step():
+    if st.session_state.step > 0:
+        st.session_state.step -= 1
+    else:
+        st.session_state.page = "intro"
+
+
+def reset_test():
+    keys_to_delete = []
+    for key in st.session_state.keys():
+        if key.startswith("profile_") or key.startswith("weight_"):
+            keys_to_delete.append(key)
+
+    for key in keys_to_delete:
+        del st.session_state[key]
+
+    st.session_state.page = "intro"
+    st.session_state.step = 0
+
+
+def is_group_answered(group_name: str) -> bool:
+    items = GROUPS[group_name]
+    profile_ok = all(st.session_state.get(f"profile_{key}") is not None for key in items.keys())
+    weight_ok = st.session_state.get(f"weight_{group_name}") is not None
+    return profile_ok and weight_ok
+
+
+def build_user_profile() -> dict:
+    user_profile = {}
+    for group_name, items in GROUPS.items():
+        for key, spec in items.items():
+            answer = st.session_state.get(f"profile_{key}")
+            if answer is not None:
+                user_profile[spec["column"]] = response_to_zero_one(answer)
+    return user_profile
+
+
+def build_raw_weights() -> dict:
+    raw_weights = {}
+    for group_name in GROUPS.keys():
+        raw_weights[group_name] = st.session_state.get(f"weight_{group_name}", 0) or 0
+    return raw_weights
 
 
 # -------------------------
@@ -189,9 +249,38 @@ def all_questions_answered() -> bool:
 st.markdown(
     """
     <style>
-    div[role="radiogroup"] {
-        gap: 1rem;
+    .main-card {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 18px;
+        border: 1px solid #e9e9e9;
+        margin-bottom: 1rem;
     }
+
+    .intro-box {
+        background: #f8f9fb;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #e8ebf0;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .step-box {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #ececec;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    div[role="radiogroup"] {
+        gap: 0.9rem;
+        margin-top: 0.3rem;
+        margin-bottom: 1rem;
+    }
+
     div[role="radiogroup"] > label {
         border: 1px solid #d9d9d9;
         border-radius: 999px;
@@ -203,39 +292,76 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+init_state()
 
 # -------------------------
-# HEADER
+# INTRO
 # -------------------------
-st.title("🎓 Kandidatesten - Cand.merc.")
-st.write(
-    "Svar på spørgsmålene, så beregner appen en personlig anbefaling baseret på dine præferencer, "
-    "dine vægte og linjernes profiler. Værktøjet skal bruges som et støtteværktøj til dine personlige tanker."
-)
+if st.session_state.page == "intro":
+    st.title("🎓 Kandidatesten - Cand.merc.")
 
-with st.expander("Model", expanded=False):
-    st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
-    st.write(
-        "Alle profilsvar omregnes fra 1–5 til 0–1. "
-        "Vægtene angives løbende efter hver blok og normaliseres automatisk, så de summerer til 1."
+    st.markdown(
+        """
+        <div class="intro-box">
+            <h3>Hvad handler testen om?</h3>
+            <p>
+                Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
+                Testen sammenholder dine præferencer med data om blandt andet studieform,
+                arbejdsmarked, faglige interesser og arbejdsstil.
+            </p>
+            <h3>Hvorfor er den relevant?</h3>
+            <p>
+                Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
+                Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
+                og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
+            </p>
+            <h3>Hvordan fungerer den?</h3>
+            <p>
+                Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
+                og viser de linjer, der matcher din profil bedst.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
+    with st.expander("Se model og metode", expanded=False):
+        st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
+        st.write(
+            "Alle profilsvar omregnes fra 1–5 til 0–1. "
+            "Vægtene normaliseres automatisk, så de samlet summerer til 1."
+        )
+
+    st.button("Start testen", type="primary", on_click=go_to_test)
+
 
 # -------------------------
-# SPØRGESKEMA
+# TESTFLOW
 # -------------------------
-user_profile = {}
-raw_weights = {}
+elif st.session_state.page == "test":
+    current_group = GROUP_ORDER[st.session_state.step]
+    current_items = GROUPS[current_group]
 
-for group_name, items in GROUPS.items():
-    st.header(group_name)
+    st.title("🎓 Kandidatesten - Cand.merc.")
+    st.caption(f"Trin {st.session_state.step + 1} af {len(GROUP_ORDER)}")
+
+    progress_value = (st.session_state.step + 1) / len(GROUP_ORDER)
+    st.progress(progress_value)
+
+    st.header(current_group)
+
+    st.markdown(
+        """
+        <div class="step-box">
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown("#### Profilspørgsmål")
     st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
-    st.caption("Svar på hvor godt udsagnene passer på dig.")
 
-    for key, spec in items.items():
-        answer = st.radio(
+    for key, spec in current_items.items():
+        st.radio(
             spec["question"],
             options=[1, 2, 3, 4, 5],
             horizontal=True,
@@ -243,63 +369,62 @@ for group_name, items in GROUPS.items():
             key=f"profile_{key}"
         )
 
-        if answer is not None:
-            user_profile[spec["column"]] = response_to_zero_one(answer)
-
     st.markdown("#### Vægtspørgsmål")
-    st.caption("Skala: 1 = Slet ikke vigtigt · 2 = Lidt vigtigt · 3 = Moderat vigtigt · 4 = Vigtigt · 5 = Meget vigtigt")
-    st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
+    st.caption("Hvor vigtigt er dette område samlet set for dig i valget af kandidatlinje?")
 
-    weight_answer = st.radio(
-        WEIGHT_QUESTIONS[group_name],
+    st.radio(
+        WEIGHT_QUESTIONS[current_group],
         options=[1, 2, 3, 4, 5],
         horizontal=True,
         index=None,
-        key=f"weight_{group_name}"
+        key=f"weight_{current_group}"
     )
 
-    raw_weights[group_name] = weight_answer if weight_answer is not None else 0
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1, 1, 3])
+
+    with col1:
+        st.button("⬅ Tilbage", on_click=prev_step)
+
+    with col2:
+        if st.button("Videre ➜", type="primary"):
+            if not is_group_answered(current_group):
+                st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
+            else:
+                next_step()
+                st.rerun()
 
     st.markdown("---")
-
-
-# -------------------------
-# VÆGTE
-# -------------------------
-group_weights = normalize_weights(raw_weights)
-
-st.header("2. Dine vægte")
-weights_df = pd.DataFrame({
-    "Dimension": list(group_weights.keys()),
-    "Rå score": [raw_weights[g] for g in group_weights],
-    "Normaliseret vægt": [round(group_weights[g], 3) for g in group_weights],
-})
-st.dataframe(weights_df, use_container_width=True, hide_index=True)
+    st.caption("Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.")
 
 
 # -------------------------
 # RESULTAT
 # -------------------------
-if st.button("Beregn anbefaling", type="primary"):
-    if not all_questions_answered():
-        st.warning("Du skal besvare alle spørgsmål og vægtspørgsmål, før vi kan beregne din anbefaling.")
-        st.stop()
-
+elif st.session_state.page == "result":
+    user_profile = build_user_profile()
+    raw_weights = build_raw_weights()
+    group_weights = normalize_weights(raw_weights)
     scores = compute_all_scores(user_profile, group_weights, LINE_DF)
 
-    st.header("3. Resultat")
+    st.title("🎓 Dit resultat")
+
     top3 = scores.head(3)
-
-    for idx, row in top3.iterrows():
-        st.metric(label=f"Top {idx+1}: {row['Linje']}", value=f"{row['Score']:.3f}")
-
-    st.subheader("Alle linjer")
-    st.dataframe(scores, use_container_width=True, hide_index=True)
-
     best_name = top3.iloc[0]["Linje"]
     best_row = LINE_DF.loc[LINE_DF["Linje"] == best_name].iloc[0]
 
-    st.subheader(f"Profilsammenligning: dig vs. {best_name}")
+    st.subheader("Top 3 anbefalinger")
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.metric(label=f"Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
+    with c2:
+        st.metric(label=f"Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
+    with c3:
+        st.metric(label=f"Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']:.3f}")
+
+    st.subheader(f"Bedste samlede match: {best_name}")
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
 
     st.subheader("Kort fortolkning")
@@ -309,13 +434,33 @@ if st.button("Beregn anbefaling", type="primary"):
     weaker = ", ".join(g for g, _ in sorted_groups[-2:])
 
     st.write(
-        f"Dit bedste match er **{best_name}**. Dine stærkeste matches ligger især inden for **{strengths}**, "
+        f"Dit bedste match er **{best_name}**. "
+        f"Dine stærkeste matches ligger især inden for **{strengths}**, "
         f"mens de relativt svagere matches ligger inden for **{weaker}**."
     )
+
+    st.subheader("Dine vægte")
+    weights_df = pd.DataFrame({
+        "Dimension": list(group_weights.keys()),
+        "Rå score": [raw_weights[g] for g in group_weights],
+        "Normaliseret vægt": [round(group_weights[g], 3) for g in group_weights],
+    })
+    st.dataframe(weights_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Alle linjer")
+    st.dataframe(scores, use_container_width=True, hide_index=True)
 
     st.subheader("Eksempel på udfyldt formel på gruppeniveau")
     terms = [f"{group_weights[g]:.3f} × {top3.iloc[0][f'Match_{g}']:.3f}" for g in GROUPS]
     st.code(" + ".join(terms) + f" = {top3.iloc[0]['Score']:.3f}")
+
+    c1, c2, c3 = st.columns([1, 1, 3])
+
+    with c1:
+        st.button("⬅ Tilbage til spørgsmål", on_click=lambda: st.session_state.update({"page": "test", "step": len(GROUP_ORDER) - 1}))
+
+    with c2:
+        st.button("Start forfra", on_click=reset_test)
 
     st.download_button(
         "Download resultater som CSV",
