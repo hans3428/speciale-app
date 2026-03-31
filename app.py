@@ -1,4 +1,3 @@
-
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
@@ -21,8 +20,10 @@ def load_line_data(path: Path) -> pd.DataFrame:
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
+    # Ledighed vendes om til jobsikkerhed
     if "Ledighed" in df.columns:
         df["Jobsikkerhed"] = 1 - df["Ledighed"]
+
     return df
 
 LINE_DF = load_line_data(DATA_PATH)
@@ -36,6 +37,10 @@ GROUPS = {
         "Jobsikkerhed": {
             "question": "Jeg lægger vægt på, at mit fremtidige arbejde giver høj jobsikkerhed",
             "column": "Jobsikkerhed",
+        },
+        "karakter_avg": {
+            "question": "Jeg trives med høje faglige krav og et højt akademisk niveau",
+            "column": "karakter_avg",
         },
     },
     "Studieform": {
@@ -51,42 +56,8 @@ GROUPS = {
             "question": "Jeg foretrækker en uddannelse med mange undervisningstimer og fast struktur",
             "column": "timer_ects",
         },
-        "Udveksling": {
-            "question": "Mulighed for udveksling er vigtig for mig",
-            "column": "Udveksling",
-        },
-        "Sprog": {
-            "question": "Jeg foretrækker en international uddannelse med engelsk som centralt element",
-            "column": "Sprog",
-        },
     },
-    "Knowledge": {
-        "EconomicsandAccounting": {
-            "question": "Jeg interesserer mig for økonomi og regnskab",
-            "column": "EconomicsandAccounting",
-        },
-        "Mathematics": {
-            "question": "Jeg interesserer mig for matematik og kvantitative analyser",
-            "column": "Mathematics",
-        },
-        "SalesandMarketing": {
-            "question": "Jeg interesserer mig for marketing, salg og forbrugeradfærd",
-            "column": "SalesandMarketing",
-        },
-        "AdministrationandManagement": {
-            "question": "Jeg interesserer mig for administration, ledelse og organisering",
-            "column": "AdministrationandManagement",
-        },
-        "PersonnelandHumanResources": {
-            "question": "Jeg interesserer mig for HR, mennesker og organisation",
-            "column": "PersonnelandHumanResources",
-        },
-    },
-    "Work styles": {
-        "Achievement Orientation": {
-            "question": "Jeg motiveres af at opnå resultater og præstere højt",
-            "column": "Achievement Orientation",
-        },
+    "Arbejdsstil – kognitiv/performance": {
         "Adaptability": {
             "question": "Jeg trives med forandringer og tilpasning til nye situationer",
             "column": "Adaptability",
@@ -96,48 +67,46 @@ GROUPS = {
             "column": "AttentiontoDetail",
         },
         "Initiative": {
-            "question": "Jeg tager ofte initiativ i mit arbejde",
+            "question": "Jeg tager ofte initiativ i opgaver og projekter",
             "column": "Initiative",
         },
-        "Innovation": {
-            "question": "Jeg kan lide at tænke innovativt og udvikle nye løsninger",
-            "column": "Innovation",
+    },
+    "Arbejdsstil – social/ledelse": {
+        "Integrity": {
+            "question": "Det er vigtigt for mig at handle ansvarligt og i overensstemmelse med mine værdier",
+            "column": "Integrity",
         },
-        "ToleranceforAmbiguity": {
-            "question": "Jeg trives med åbne problemstillinger og tvetydighed",
-            "column": "ToleranceforAmbiguity",
+        "Empathy": {
+            "question": "Jeg er god til at forstå og tage hensyn til andre menneskers perspektiver",
+            "column": "Empathy",
+        },
+        "LeadershipOrientation": {
+            "question": "Jeg motiveres af at tage lederskab og sætte retning for andre",
+            "column": "LeadershipOrientation",
         },
     },
-    "Work activities": {
-        "CommunicatingwithPeopleOutsid": {
-            "question": "Jeg kan lide at kommunikere med mennesker uden for organisationen",
-            "column": "CommunicatingwithPeopleOutsid",
+    "Faglige interesser": {
+        "LawandGovernment": {
+            "question": "Jeg interesserer mig for jura, regulering og offentlige forhold",
+            "column": "LawandGovernment",
         },
-        "DevelopingandBuildingTeams": {
-            "question": "Jeg kan lide at udvikle og opbygge teams",
-            "column": "DevelopingandBuildingTeams",
+        "Mathematics": {
+            "question": "Jeg interesserer mig for matematik og kvantitative analyser",
+            "column": "Mathematics",
         },
-        "GuidingDirectingandMotivati": {
-            "question": "Jeg kan lide at guide, lede og motivere andre",
-            "column": "GuidingDirectingandMotivati",
-        },
-        "MonitoringandControllingResou": {
-            "question": "Jeg kan lide at overvåge og styre ressourcer og processer",
-            "column": "MonitoringandControllingResou",
-        },
-        "ResolvingConflictsandNegotiat": {
-            "question": "Jeg kan lide at løse konflikter og forhandle",
-            "column": "ResolvingConflictsandNegotiat",
+        "SalesandMarketing": {
+            "question": "Jeg interesserer mig for marketing, salg og forbrugeradfærd",
+            "column": "SalesandMarketing",
         },
     },
 }
 
 WEIGHT_QUESTIONS = {
-    "Arbejdsmarked": "Hvor vigtigt er karriere- og arbejdsmarkedsmuligheder for dig i valget af kandidatlinje?",
+    "Arbejdsmarked": "Hvor vigtigt er arbejdsmarked og karrieremuligheder for dig i valget af kandidatlinje?",
     "Studieform": "Hvor vigtigt er det for dig, at studieformen passer til dine præferencer?",
-    "Knowledge": "Hvor vigtigt er det for dig, at linjen matcher dine faglige interesser?",
-    "Work styles": "Hvor vigtigt er det for dig, at linjen matcher dine personlige arbejdsstile?",
-    "Work activities": "Hvor vigtigt er det for dig, at linjen matcher de arbejdsopgaver, du foretrækker?",
+    "Arbejdsstil – kognitiv/performance": "Hvor vigtigt er det for dig, at linjen matcher din måde at arbejde og præstere på?",
+    "Arbejdsstil – social/ledelse": "Hvor vigtigt er det for dig, at linjen matcher din sociale og ledelsesmæssige arbejdsstil?",
+    "Faglige interesser": "Hvor vigtigt er det for dig, at linjen matcher dine faglige interesser?",
 }
 
 def response_to_zero_one(value: int) -> float:
@@ -173,10 +142,12 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     axis_labels = list(GROUPS.keys())
     user_vals = []
     line_vals = []
+
     for group in axis_labels:
         cols = [spec["column"] for spec in GROUPS[group].values()]
         user_vals.append(sum(user_profile[c] for c in cols) / len(cols))
         line_vals.append(sum(float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])) / len(cols))
+
     user_vals.append(user_vals[0])
     line_vals.append(line_vals[0])
     labels = axis_labels + [axis_labels[0]]
@@ -200,26 +171,46 @@ st.write(
 
 with st.expander("Model", expanded=False):
     st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
-    st.write("Alle profilsvar omregnes fra 1–5 til 0–1. Vægtene normaliseres automatisk, så de summerer til 1.")
+    st.write(
+        "Alle profilsvar omregnes fra 1–5 til 0–1. "
+        "Vægtene angives løbende efter hver blok og normaliseres automatisk, så de summerer til 1."
+    )
 
-st.header("1. Profilspørgsmål")
-st.markdown("**Skala:** 1 = Slet ikke, 2 = I lav grad, 3 = I nogen grad, 4 = I høj grad, 5 = I meget høj grad")
+st.header("1. Spørgeskema")
+st.markdown("**Profilskala:** 1 = Slet ikke, 2 = I lav grad, 3 = I nogen grad, 4 = I høj grad, 5 = I meget høj grad")
+st.markdown("**Vægtskala:** 1 = Slet ikke vigtigt, 2 = Lidt vigtigt, 3 = Moderat vigtigt, 4 = Vigtigt, 5 = Meget vigtigt")
 
 user_profile = {}
+raw_weights = {}
+
 for group_name, items in GROUPS.items():
     st.subheader(group_name)
+
+    # 3 profilspørgsmål
     for key, spec in items.items():
-        answer = st.slider(spec["question"], min_value=1, max_value=5, value=3, key=f"profile_{key}")
+        answer = st.slider(
+            spec["question"],
+            min_value=1,
+            max_value=5,
+            value=3,
+            key=f"profile_{key}"
+        )
         user_profile[spec["column"]] = response_to_zero_one(answer)
 
-st.header("2. Vægtspørgsmål")
-st.markdown("**Skala:** 1 = Slet ikke vigtigt, 2 = Lidt vigtigt, 3 = Moderat vigtigt, 4 = Vigtigt, 5 = Meget vigtigt")
+    # 1 vægtspørgsmål lige efter blokken
+    raw_weights[group_name] = st.slider(
+        WEIGHT_QUESTIONS[group_name],
+        min_value=1,
+        max_value=5,
+        value=3,
+        key=f"weight_{group_name}"
+    )
 
-raw_weights = {}
-for group_name, question in WEIGHT_QUESTIONS.items():
-    raw_weights[group_name] = st.slider(question, min_value=1, max_value=5, value=3, key=f"weight_{group_name}")
+    st.markdown("---")
 
 group_weights = normalize_weights(raw_weights)
+
+st.header("2. Dine vægte")
 weights_df = pd.DataFrame({
     "Dimension": list(group_weights.keys()),
     "Rå score": [raw_weights[g] for g in group_weights],
