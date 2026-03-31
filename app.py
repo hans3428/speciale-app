@@ -21,7 +21,6 @@ def load_line_data(path: Path) -> pd.DataFrame:
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    # Ledighed omkodes til jobsikkerhed
     if "Ledighed" in df.columns:
         df["Jobsikkerhed"] = 1 - df["Ledighed"]
 
@@ -131,12 +130,7 @@ def compute_group_match(user_profile: dict, line_row: pd.Series, group_name: str
 
     for spec in specs.values():
         col = spec["column"]
-
-        if (
-            col in user_profile
-            and col in line_row.index
-            and pd.notna(line_row[col])
-        ):
+        if col in user_profile and col in line_row.index and pd.notna(line_row[col]):
             scores.append(1 - abs(user_profile[col] - float(line_row[col])))
 
     return sum(scores) / len(scores) if scores else 0.0
@@ -147,9 +141,15 @@ def compute_all_scores(user_profile: dict, group_weights: dict, df: pd.DataFrame
     for _, row in df.iterrows():
         group_matches = {group: compute_group_match(user_profile, row, group) for group in GROUPS}
         total_score = sum(group_weights[g] * group_matches[g] for g in GROUPS)
-        out = {"Linje": row["Linje"], "Score": total_score}
+
+        out = {
+            "Linje": row["Linje"],
+            "Score": total_score,
+        }
+
         for group in GROUPS:
             out[f"Match_{group}"] = group_matches[group]
+
         rows.append(out)
 
     return pd.DataFrame(rows).sort_values("Score", ascending=False).reset_index(drop=True)
@@ -162,7 +162,6 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
 
     for group in axis_labels:
         cols = [spec["column"] for spec in GROUPS[group].values()]
-
         valid_user_vals = [user_profile[c] for c in cols if c in user_profile]
         valid_line_vals = [float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])]
 
@@ -190,6 +189,10 @@ def init_state():
         st.session_state.page = "intro"
     if "step" not in st.session_state:
         st.session_state.step = 0
+    if "answers" not in st.session_state:
+        st.session_state.answers = {}
+    if "weights" not in st.session_state:
+        st.session_state.weights = {}
 
 
 def go_to_intro():
@@ -216,41 +219,63 @@ def prev_step():
         st.session_state.page = "intro"
 
 
+def go_to_last_step():
+    st.session_state.page = "test"
+    st.session_state.step = len(GROUP_ORDER) - 1
+
+
 def reset_test():
-    keys_to_delete = []
     for key in list(st.session_state.keys()):
-        if key.startswith("profile_") or key.startswith("weight_"):
-            keys_to_delete.append(key)
+        if key.startswith("widget_profile_") or key.startswith("widget_weight_"):
+            del st.session_state[key]
 
-    for key in keys_to_delete:
-        del st.session_state[key]
-
+    st.session_state.answers = {}
+    st.session_state.weights = {}
     st.session_state.page = "intro"
     st.session_state.step = 0
 
 
+def save_current_group_answers(group_name: str):
+    items = GROUPS[group_name]
+
+    for key, spec in items.items():
+        widget_key = f"widget_profile_{key}"
+        answer = st.session_state.get(widget_key)
+        if answer is not None:
+            st.session_state.answers[spec["column"]] = response_to_zero_one(answer)
+
+    weight_widget_key = f"widget_weight_{group_name}"
+    weight_answer = st.session_state.get(weight_widget_key)
+    if weight_answer is not None:
+        st.session_state.weights[group_name] = weight_answer
+
+
+def load_current_group_defaults(group_name: str):
+    items = GROUPS[group_name]
+
+    for key, spec in items.items():
+        widget_key = f"widget_profile_{key}"
+        col = spec["column"]
+
+        if widget_key not in st.session_state and col in st.session_state.answers:
+            saved = st.session_state.answers[col]
+            st.session_state[widget_key] = int(round(saved * 4 + 1))
+
+    weight_widget_key = f"widget_weight_{group_name}"
+    if weight_widget_key not in st.session_state and group_name in st.session_state.weights:
+        st.session_state[weight_widget_key] = st.session_state.weights[group_name]
+
+
 def is_group_answered(group_name: str) -> bool:
     items = GROUPS[group_name]
-    profile_ok = all(st.session_state.get(f"profile_{key}") is not None for key in items.keys())
-    weight_ok = st.session_state.get(f"weight_{group_name}") is not None
+
+    profile_ok = all(
+        st.session_state.get(f"widget_profile_{key}") is not None
+        for key in items.keys()
+    )
+    weight_ok = st.session_state.get(f"widget_weight_{group_name}") is not None
+
     return profile_ok and weight_ok
-
-
-def build_user_profile() -> dict:
-    user_profile = {}
-    for group_name, items in GROUPS.items():
-        for key, spec in items.items():
-            answer = st.session_state.get(f"profile_{key}")
-            if answer is not None:
-                user_profile[spec["column"]] = response_to_zero_one(answer)
-    return user_profile
-
-
-def build_raw_weights() -> dict:
-    raw_weights = {}
-    for group_name in GROUPS.keys():
-        raw_weights[group_name] = st.session_state.get(f"weight_{group_name}", 0) or 0
-    return raw_weights
 
 
 def all_profile_columns_present(user_profile: dict) -> bool:
@@ -345,13 +370,14 @@ if st.session_state.page == "intro":
 
     st.button("Start testen", type="primary", on_click=go_to_test)
 
-
 # -------------------------
 # TESTFLOW
 # -------------------------
 elif st.session_state.page == "test":
     current_group = GROUP_ORDER[st.session_state.step]
     current_items = GROUPS[current_group]
+
+    load_current_group_defaults(current_group)
 
     st.title("🎓 Kandidatesten - Cand.merc.")
     st.caption(f"Trin {st.session_state.step + 1} af {len(GROUP_ORDER)}")
@@ -372,7 +398,7 @@ elif st.session_state.page == "test":
             options=[1, 2, 3, 4, 5],
             horizontal=True,
             index=None,
-            key=f"profile_{key}"
+            key=f"widget_profile_{key}"
         )
 
     st.markdown("#### Vægtspørgsmål")
@@ -383,7 +409,7 @@ elif st.session_state.page == "test":
         options=[1, 2, 3, 4, 5],
         horizontal=True,
         index=None,
-        key=f"weight_{current_group}"
+        key=f"widget_weight_{current_group}"
     )
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -391,35 +417,47 @@ elif st.session_state.page == "test":
     col1, col2, col3 = st.columns([1, 1, 3])
 
     with col1:
-        st.button("⬅ Tilbage", on_click=prev_step)
+        if st.button("⬅ Tilbage"):
+            save_current_group_answers(current_group)
+            prev_step()
+            st.rerun()
 
     with col2:
         if st.button("Videre ➜", type="primary"):
             if not is_group_answered(current_group):
                 st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
             else:
+                save_current_group_answers(current_group)
                 next_step()
                 st.rerun()
 
     st.markdown("---")
     st.caption("Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.")
 
-
 # -------------------------
 # RESULTAT
 # -------------------------
 elif st.session_state.page == "result":
-    user_profile = build_user_profile()
-    raw_weights = build_raw_weights()
+    user_profile = st.session_state.answers.copy()
+    raw_weights = st.session_state.weights.copy()
     group_weights = normalize_weights(raw_weights)
+
+    st.title("🎓 Dit resultat")
 
     if not all_profile_columns_present(user_profile):
         st.error("Der mangler et eller flere profilsvar. Gå tilbage og gennemfør alle spørgsmål igen.")
+        c1, c2 = st.columns(2)
+        with c1:
+            if st.button("⬅ Tilbage til sidste blok"):
+                go_to_last_step()
+                st.rerun()
+        with c2:
+            if st.button("Start forfra"):
+                reset_test()
+                st.rerun()
         st.stop()
 
     scores = compute_all_scores(user_profile, group_weights, LINE_DF)
-
-    st.title("🎓 Dit resultat")
 
     if scores.empty:
         st.error("Der kunne ikke beregnes et resultat.")
@@ -477,13 +515,14 @@ elif st.session_state.page == "result":
     c1, c2, c3 = st.columns([1, 1, 3])
 
     with c1:
-        st.button(
-            "⬅ Tilbage til spørgsmål",
-            on_click=lambda: st.session_state.update({"page": "test", "step": len(GROUP_ORDER) - 1})
-        )
+        if st.button("⬅ Tilbage til spørgsmål"):
+            go_to_last_step()
+            st.rerun()
 
     with c2:
-        st.button("Start forfra", on_click=reset_test)
+        if st.button("Start forfra"):
+            reset_test()
+            st.rerun()
 
     st.download_button(
         "Download resultater som CSV",
