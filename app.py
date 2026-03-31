@@ -128,10 +128,17 @@ def normalize_weights(raw_weights: dict) -> dict:
 def compute_group_match(user_profile: dict, line_row: pd.Series, group_name: str) -> float:
     specs = GROUPS[group_name]
     scores = []
+
     for spec in specs.values():
         col = spec["column"]
-        if col in line_row.index and pd.notna(line_row[col]):
+
+        if (
+            col in user_profile
+            and col in line_row.index
+            and pd.notna(line_row[col])
+        ):
             scores.append(1 - abs(user_profile[col] - float(line_row[col])))
+
     return sum(scores) / len(scores) if scores else 0.0
 
 
@@ -144,6 +151,7 @@ def compute_all_scores(user_profile: dict, group_weights: dict, df: pd.DataFrame
         for group in GROUPS:
             out[f"Match_{group}"] = group_matches[group]
         rows.append(out)
+
     return pd.DataFrame(rows).sort_values("Score", ascending=False).reset_index(drop=True)
 
 
@@ -154,8 +162,11 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
 
     for group in axis_labels:
         cols = [spec["column"] for spec in GROUPS[group].values()]
-        user_vals.append(sum(user_profile[c] for c in cols) / len(cols))
+
+        valid_user_vals = [user_profile[c] for c in cols if c in user_profile]
         valid_line_vals = [float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])]
+
+        user_vals.append(sum(valid_user_vals) / len(valid_user_vals) if valid_user_vals else 0)
         line_vals.append(sum(valid_line_vals) / len(valid_line_vals) if valid_line_vals else 0)
 
     user_vals.append(user_vals[0])
@@ -177,7 +188,6 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
 def init_state():
     if "page" not in st.session_state:
         st.session_state.page = "intro"
-
     if "step" not in st.session_state:
         st.session_state.step = 0
 
@@ -208,7 +218,7 @@ def prev_step():
 
 def reset_test():
     keys_to_delete = []
-    for key in st.session_state.keys():
+    for key in list(st.session_state.keys()):
         if key.startswith("profile_") or key.startswith("weight_"):
             keys_to_delete.append(key)
 
@@ -243,20 +253,21 @@ def build_raw_weights() -> dict:
     return raw_weights
 
 
+def all_profile_columns_present(user_profile: dict) -> bool:
+    required_cols = [
+        spec["column"]
+        for group in GROUPS.values()
+        for spec in group.values()
+    ]
+    return all(col in user_profile for col in required_cols)
+
+
 # -------------------------
 # STYLING
 # -------------------------
 st.markdown(
     """
     <style>
-    .main-card {
-        background: #ffffff;
-        padding: 2rem;
-        border-radius: 18px;
-        border: 1px solid #e9e9e9;
-        margin-bottom: 1rem;
-    }
-
     .intro-box {
         background: #f8f9fb;
         padding: 1.5rem;
@@ -350,12 +361,7 @@ elif st.session_state.page == "test":
 
     st.header(current_group)
 
-    st.markdown(
-        """
-        <div class="step-box">
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown('<div class="step-box">', unsafe_allow_html=True)
 
     st.markdown("#### Profilspørgsmål")
     st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
@@ -406,11 +412,25 @@ elif st.session_state.page == "result":
     user_profile = build_user_profile()
     raw_weights = build_raw_weights()
     group_weights = normalize_weights(raw_weights)
+
+    if not all_profile_columns_present(user_profile):
+        st.error("Der mangler et eller flere profilsvar. Gå tilbage og gennemfør alle spørgsmål igen.")
+        st.stop()
+
     scores = compute_all_scores(user_profile, group_weights, LINE_DF)
 
     st.title("🎓 Dit resultat")
 
+    if scores.empty:
+        st.error("Der kunne ikke beregnes et resultat.")
+        st.stop()
+
     top3 = scores.head(3)
+
+    if len(top3) < 3:
+        st.error("Der er for få linjer i datasættet til at vise top 3.")
+        st.stop()
+
     best_name = top3.iloc[0]["Linje"]
     best_row = LINE_DF.loc[LINE_DF["Linje"] == best_name].iloc[0]
 
@@ -418,11 +438,11 @@ elif st.session_state.page == "result":
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        st.metric(label=f"Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
+        st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
     with c2:
-        st.metric(label=f"Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
+        st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
     with c3:
-        st.metric(label=f"Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']:.3f}")
+        st.metric(label="Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']:.3f}")
 
     st.subheader(f"Bedste samlede match: {best_name}")
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
@@ -457,7 +477,10 @@ elif st.session_state.page == "result":
     c1, c2, c3 = st.columns([1, 1, 3])
 
     with c1:
-        st.button("⬅ Tilbage til spørgsmål", on_click=lambda: st.session_state.update({"page": "test", "step": len(GROUP_ORDER) - 1}))
+        st.button(
+            "⬅ Tilbage til spørgsmål",
+            on_click=lambda: st.session_state.update({"page": "test", "step": len(GROUP_ORDER) - 1})
+        )
 
     with c2:
         st.button("Start forfra", on_click=reset_test)
