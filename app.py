@@ -193,7 +193,7 @@ with st.expander("Model", expanded=False):
 # -------------------------
 # SPØRGESKEMA
 # -------------------------
-st.header("1. Spørgeskema")
+
 
 user_profile = {}
 raw_weights = {}
