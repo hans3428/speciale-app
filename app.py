@@ -8,6 +8,7 @@ st.set_page_config(page_title="Cand.merc.-linjematch", page_icon="🎓", layout=
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "DATA.xlsx"
 
+
 @st.cache_data
 def load_line_data(path: Path) -> pd.DataFrame:
     raw = pd.read_excel(path)
@@ -20,11 +21,12 @@ def load_line_data(path: Path) -> pd.DataFrame:
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    # Ledighed vendes om til jobsikkerhed
+    # Ledighed omkodes til jobsikkerhed
     if "Ledighed" in df.columns:
         df["Jobsikkerhed"] = 1 - df["Ledighed"]
 
     return df
+
 
 LINE_DF = load_line_data(DATA_PATH)
 
@@ -109,14 +111,17 @@ WEIGHT_QUESTIONS = {
     "Faglige interesser": "Hvor vigtigt er det for dig, at linjen matcher dine faglige interesser?",
 }
 
+
 def response_to_zero_one(value: int) -> float:
     return (value - 1) / 4
+
 
 def normalize_weights(raw_weights: dict) -> dict:
     total = sum(raw_weights.values())
     if total == 0:
         return {k: 1 / len(raw_weights) for k in raw_weights}
     return {k: v / total for k, v in raw_weights.items()}
+
 
 def compute_group_match(user_profile: dict, line_row: pd.Series, group_name: str) -> float:
     specs = GROUPS[group_name]
@@ -126,6 +131,7 @@ def compute_group_match(user_profile: dict, line_row: pd.Series, group_name: str
         if col in line_row.index and pd.notna(line_row[col]):
             scores.append(1 - abs(user_profile[col] - float(line_row[col])))
     return sum(scores) / len(scores) if scores else 0.0
+
 
 def compute_all_scores(user_profile: dict, group_weights: dict, df: pd.DataFrame) -> pd.DataFrame:
     rows = []
@@ -138,6 +144,7 @@ def compute_all_scores(user_profile: dict, group_weights: dict, df: pd.DataFrame
         rows.append(out)
     return pd.DataFrame(rows).sort_values("Score", ascending=False).reset_index(drop=True)
 
+
 def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     axis_labels = list(GROUPS.keys())
     user_vals = []
@@ -146,7 +153,9 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     for group in axis_labels:
         cols = [spec["column"] for spec in GROUPS[group].values()]
         user_vals.append(sum(user_profile[c] for c in cols) / len(cols))
-        line_vals.append(sum(float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])) / len(cols))
+        line_vals.append(
+            sum(float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])) / len(cols)
+        )
 
     user_vals.append(user_vals[0])
     line_vals.append(line_vals[0])
@@ -163,6 +172,10 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     )
     return fig
 
+
+# -------------------------
+# HEADER
+# -------------------------
 st.title("🎓 Cand.merc.-linjematch")
 st.write(
     "Svar på spørgsmålene, så beregner appen en personlig anbefaling baseret på dine præferencer, "
@@ -176,9 +189,11 @@ with st.expander("Model", expanded=False):
         "Vægtene angives løbende efter hver blok og normaliseres automatisk, så de summerer til 1."
     )
 
+
+# -------------------------
+# SPØRGESKEMA
+# -------------------------
 st.header("1. Spørgeskema")
-st.markdown("**Profilskala:** 1 = Slet ikke, 2 = I lav grad, 3 = I nogen grad, 4 = I høj grad, 5 = I meget høj grad")
-st.markdown("**Vægtskala:** 1 = Slet ikke vigtigt, 2 = Lidt vigtigt, 3 = Moderat vigtigt, 4 = Vigtigt, 5 = Meget vigtigt")
 
 user_profile = {}
 raw_weights = {}
@@ -186,7 +201,11 @@ raw_weights = {}
 for group_name, items in GROUPS.items():
     st.subheader(group_name)
 
-    # 3 profilspørgsmål
+    # Profilspørgsmål
+    st.markdown("### Profilspørgsmål")
+    st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
+    st.caption("Svar på hvor godt udsagnene passer på dig.")
+
     for key, spec in items.items():
         answer = st.slider(
             spec["question"],
@@ -197,7 +216,11 @@ for group_name, items in GROUPS.items():
         )
         user_profile[spec["column"]] = response_to_zero_one(answer)
 
-    # 1 vægtspørgsmål lige efter blokken
+    # Vægtspørgsmål
+    st.markdown("### Vægtspørgsmål")
+    st.caption("Skala: 1 = Slet ikke vigtigt · 2 = Lidt vigtigt · 3 = Moderat vigtigt · 4 = Vigtigt · 5 = Meget vigtigt")
+    st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
+
     raw_weights[group_name] = st.slider(
         WEIGHT_QUESTIONS[group_name],
         min_value=1,
@@ -208,6 +231,10 @@ for group_name, items in GROUPS.items():
 
     st.markdown("---")
 
+
+# -------------------------
+# VÆGTE
+# -------------------------
 group_weights = normalize_weights(raw_weights)
 
 st.header("2. Dine vægte")
@@ -218,6 +245,10 @@ weights_df = pd.DataFrame({
 })
 st.dataframe(weights_df, use_container_width=True, hide_index=True)
 
+
+# -------------------------
+# RESULTAT
+# -------------------------
 if st.button("Beregn anbefaling", type="primary"):
     scores = compute_all_scores(user_profile, group_weights, LINE_DF)
 
