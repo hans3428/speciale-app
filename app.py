@@ -176,10 +176,10 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
 # -------------------------
 # HEADER
 # -------------------------
-st.title("🎓 Cand.merc.-linjematch")
+st.title("🎓 Kandidatesten - Cand.merc.")
 st.write(
     "Svar på spørgsmålene, så beregner appen en personlig anbefaling baseret på dine præferencer, "
-    "dine vægte og linjernes profiler i DATA.xlsx."
+    "dine vægte og linjernes profiler. Værktøjet skal bruges som et støtteværktøj til dine personlige tanker."
 )
 
 with st.expander("Model", expanded=False):
@@ -193,7 +193,6 @@ with st.expander("Model", expanded=False):
 # -------------------------
 # SPØRGESKEMA
 # -------------------------
-st.header("1. Spørgeskema")
 
 user_profile = {}
 raw_weights = {}
