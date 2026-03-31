@@ -153,9 +153,8 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     for group in axis_labels:
         cols = [spec["column"] for spec in GROUPS[group].values()]
         user_vals.append(sum(user_profile[c] for c in cols) / len(cols))
-        line_vals.append(
-            sum(float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])) / len(cols)
-        )
+        valid_line_vals = [float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])]
+        line_vals.append(sum(valid_line_vals) / len(valid_line_vals) if valid_line_vals else 0)
 
     user_vals.append(user_vals[0])
     line_vals.append(line_vals[0])
@@ -171,6 +170,38 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
         margin=dict(l=20, r=20, t=20, b=20),
     )
     return fig
+
+
+def all_questions_answered() -> bool:
+    profile_keys = [
+        f"profile_{key}"
+        for group in GROUPS.values()
+        for key in group.keys()
+    ]
+    weight_keys = [f"weight_{group_name}" for group_name in GROUPS.keys()]
+
+    return all(st.session_state.get(k) is not None for k in profile_keys + weight_keys)
+
+
+# -------------------------
+# STYLING
+# -------------------------
+st.markdown(
+    """
+    <style>
+    div[role="radiogroup"] {
+        gap: 1rem;
+    }
+    div[role="radiogroup"] > label {
+        border: 1px solid #d9d9d9;
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        background: #fafafa;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # -------------------------
@@ -193,41 +224,41 @@ with st.expander("Model", expanded=False):
 # -------------------------
 # SPØRGESKEMA
 # -------------------------
-
 user_profile = {}
 raw_weights = {}
 
 for group_name, items in GROUPS.items():
-    # Stor gruppetitel
     st.header(group_name)
 
-    # Profilspørgsmål
     st.markdown("#### Profilspørgsmål")
     st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
     st.caption("Svar på hvor godt udsagnene passer på dig.")
 
     for key, spec in items.items():
-        answer = st.slider(
+        answer = st.radio(
             spec["question"],
-            min_value=1,
-            max_value=5,
-            value=3,
+            options=[1, 2, 3, 4, 5],
+            horizontal=True,
+            index=None,
             key=f"profile_{key}"
         )
-        user_profile[spec["column"]] = response_to_zero_one(answer)
 
-    # Vægtspørgsmål
+        if answer is not None:
+            user_profile[spec["column"]] = response_to_zero_one(answer)
+
     st.markdown("#### Vægtspørgsmål")
     st.caption("Skala: 1 = Slet ikke vigtigt · 2 = Lidt vigtigt · 3 = Moderat vigtigt · 4 = Vigtigt · 5 = Meget vigtigt")
     st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
 
-    raw_weights[group_name] = st.slider(
+    weight_answer = st.radio(
         WEIGHT_QUESTIONS[group_name],
-        min_value=1,
-        max_value=5,
-        value=3,
+        options=[1, 2, 3, 4, 5],
+        horizontal=True,
+        index=None,
         key=f"weight_{group_name}"
     )
+
+    raw_weights[group_name] = weight_answer if weight_answer is not None else 0
 
     st.markdown("---")
 
@@ -250,6 +281,10 @@ st.dataframe(weights_df, use_container_width=True, hide_index=True)
 # RESULTAT
 # -------------------------
 if st.button("Beregn anbefaling", type="primary"):
+    if not all_questions_answered():
+        st.warning("Du skal besvare alle spørgsmål og vægtspørgsmål, før vi kan beregne din anbefaling.")
+        st.stop()
+
     scores = compute_all_scores(user_profile, group_weights, LINE_DF)
 
     st.header("3. Resultat")
@@ -272,6 +307,7 @@ if st.button("Beregn anbefaling", type="primary"):
     sorted_groups = sorted(group_matches.items(), key=lambda x: x[1], reverse=True)
     strengths = ", ".join(g for g, _ in sorted_groups[:2])
     weaker = ", ".join(g for g, _ in sorted_groups[-2:])
+
     st.write(
         f"Dit bedste match er **{best_name}**. Dine stærkeste matches ligger især inden for **{strengths}**, "
         f"mens de relativt svagere matches ligger inden for **{weaker}**."
