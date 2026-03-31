@@ -193,16 +193,17 @@ with st.expander("Model", expanded=False):
 # -------------------------
 # SPØRGESKEMA
 # -------------------------
-
+st.header("1. Spørgeskema")
 
 user_profile = {}
 raw_weights = {}
 
 for group_name, items in GROUPS.items():
-    st.subheader(group_name)
+    # Stor gruppetitel
+    st.header(group_name)
 
     # Profilspørgsmål
-    st.markdown("### Profilspørgsmål")
+    st.markdown("#### Profilspørgsmål")
     st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
     st.caption("Svar på hvor godt udsagnene passer på dig.")
 
@@ -217,7 +218,7 @@ for group_name, items in GROUPS.items():
         user_profile[spec["column"]] = response_to_zero_one(answer)
 
     # Vægtspørgsmål
-    st.markdown("### Vægtspørgsmål")
+    st.markdown("#### Vægtspørgsmål")
     st.caption("Skala: 1 = Slet ikke vigtigt · 2 = Lidt vigtigt · 3 = Moderat vigtigt · 4 = Vigtigt · 5 = Meget vigtigt")
     st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
 
