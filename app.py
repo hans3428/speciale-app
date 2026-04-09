@@ -328,52 +328,172 @@ def all_profile_columns_present(user_profile: dict) -> bool:
 st.markdown(
     """
     <style>
-    .intro-box {
-        background: #f8f9fb;
-        padding: 1.5rem;
-        border-radius: 16px;
-        border: 1px solid #e8ebf0;
+    .stApp {
+        background:
+            radial-gradient(circle at top left, rgba(255,255,255,0.16), transparent 28%),
+            linear-gradient(135deg, #0f4c81 0%, #1f6fb2 52%, #4ea3d8 100%);
+    }
+
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 980px;
+    }
+
+    h1, h2, h3, p, div, span, label {
+        color: #ffffff;
+    }
+
+    .intro-card {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(8px);
+        border-radius: 28px;
+        padding: 1.7rem 1.7rem 1.4rem 1.7rem;
+        box-shadow: 0 18px 40px rgba(8, 27, 51, 0.18);
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
 
-    .step-box {
+    .step-shell {
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 28px;
+        padding: 1.4rem;
+        box-shadow: 0 18px 40px rgba(8, 27, 51, 0.18);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .question-card {
         background: #ffffff;
-        padding: 1.5rem;
-        border-radius: 16px;
-        border: 1px solid #ececec;
-        margin-top: 1rem;
+        border-radius: 24px;
+        padding: 1.25rem 1.25rem 0.7rem 1.25rem;
+        box-shadow: 0 10px 28px rgba(10, 35, 66, 0.12);
         margin-bottom: 1rem;
     }
 
-    .question-box {
-        margin-bottom: 1.2rem;
-    }
-
-    .question-text {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 0.2rem;
-    }
-
-    .anchor-text {
-        color: #5f6368;
-        font-size: 0.92rem;
-        margin-top: 0rem;
+    .question-label {
+        color: #c9bedc;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
         margin-bottom: 0.65rem;
     }
 
+    .question-text {
+        color: #4b4f9d;
+        font-size: 1.9rem;
+        line-height: 1.15;
+        font-weight: 700;
+        margin-bottom: 0.65rem;
+    }
+
+    .anchor-text {
+        color: #6f7391;
+        font-size: 0.98rem;
+        line-height: 1.45;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+        color: #ffffff;
+        font-weight: 700;
+        margin-top: 0.2rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .section-caption {
+        color: rgba(255,255,255,0.86);
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    div[data-testid="stMetric"] {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 20px;
+        padding: 0.8rem 1rem;
+    }
+
+    div[data-testid="stDataFrame"] {
+        background: rgba(255,255,255,0.96);
+        border-radius: 18px;
+        padding: 0.25rem;
+    }
+
+    .stButton > button,
+    .stDownloadButton > button {
+        border-radius: 999px;
+        border: none;
+        padding: 0.55rem 1.2rem;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(9, 27, 49, 0.18);
+    }
+
+    .stButton > button[kind="primary"] {
+        background: #ffffff;
+        color: #155088;
+    }
+
+    .stButton > button:not([kind="primary"]),
+    .stDownloadButton > button {
+        background: rgba(255,255,255,0.16);
+        color: #ffffff;
+        border: 1px solid rgba(255,255,255,0.22);
+    }
+
+    div[data-testid="stExpander"] {
+        background: rgba(255,255,255,0.12);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    div[data-testid="stExpander"] summary p {
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    .stProgress > div > div > div > div {
+        background: linear-gradient(90deg, #dff2ff 0%, #ffffff 100%);
+    }
+
+    .stProgress > div > div {
+        background: rgba(255,255,255,0.22);
+    }
+
+    .stRadio > label {
+        display: none;
+    }
+
     div[role="radiogroup"] {
-        gap: 0.9rem;
-        margin-top: 0.1rem;
-        margin-bottom: 1rem;
+        gap: 0.85rem;
+        margin-top: 0.15rem;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
     }
 
     div[role="radiogroup"] > label {
-        border: 1px solid #d9d9d9;
+        border: 1.5px solid #dde5f0;
         border-radius: 999px;
-        padding: 0.35rem 0.9rem;
-        background: #fafafa;
+        padding: 0.45rem 1rem;
+        background: #fafcff;
+        min-width: 76px;
+        justify-content: center;
+    }
+
+    div[role="radiogroup"] > label span {
+        color: #364152 !important;
+        font-weight: 600;
+    }
+
+    div[role="radiogroup"] > label[data-baseweb="radio"] input:checked + div {
+        background-color: #5f66d6 !important;
+        border-color: #5f66d6 !important;
+    }
+
+    code {
+        color: #0b2f54;
     }
     </style>
     """,
@@ -390,7 +510,7 @@ if st.session_state.page == "intro":
 
     st.markdown(
         """
-        <div class="intro-box">
+        <div class="intro-card">
             <h3>Hvad handler testen om?</h3>
             <p>
                 Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
@@ -439,14 +559,16 @@ elif st.session_state.page == "test":
 
     st.header(current_group)
 
-    st.markdown('<div class="step-box">', unsafe_allow_html=True)
+    st.markdown('<div class="step-shell">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-caption">Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad</div>',
+        unsafe_allow_html=True
+    )
 
-    st.markdown("#### Profilspørgsmål")
-    st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
-
-    for key, spec in current_items.items():
-        st.markdown('<div class="question-box">', unsafe_allow_html=True)
-
+    for i, (key, spec) in enumerate(current_items.items(), start=1):
+        st.markdown('<div class="question-card">', unsafe_allow_html=True)
+        st.markdown(f'<div class="question-label">Q{i:02d}</div>', unsafe_allow_html=True)
         st.markdown(
             f'<div class="question-text">{spec["question"]}</div>',
             unsafe_allow_html=True
@@ -466,19 +588,29 @@ elif st.session_state.page == "test":
             key=f"widget_profile_{key}",
             label_visibility="collapsed",
         )
-
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("#### Vægtspørgsmål")
-    st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
+    st.markdown('<div class="section-title">Vægtspørgsmål</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-caption">Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.</div>',
+        unsafe_allow_html=True
+    )
 
+    st.markdown('<div class="question-card">', unsafe_allow_html=True)
+    st.markdown('<div class="question-label">VÆGT</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="question-text" style="font-size:1.5rem;">{WEIGHT_QUESTIONS[current_group]}</div>',
+        unsafe_allow_html=True
+    )
     st.radio(
-        WEIGHT_QUESTIONS[current_group],
+        label="",
         options=[1, 2, 3, 4, 5],
         horizontal=True,
         index=None,
-        key=f"widget_weight_{current_group}"
+        key=f"widget_weight_{current_group}",
+        label_visibility="collapsed",
     )
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -499,7 +631,6 @@ elif st.session_state.page == "test":
                 next_step()
                 st.rerun()
 
-    st.markdown("---")
     st.caption("Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.")
 
 # -------------------------
