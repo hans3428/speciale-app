@@ -336,26 +336,37 @@ def render_test_header(step: int, total_steps: int, subtitle: str) -> None:
     )
 
 
+def render_custom_progress(progress_value: float) -> None:
+    st.markdown(
+        f"""
+        <div class="progress-shell">
+            <div class="progress-fill" style="width:{progress_value * 100:.1f}%;"></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(180deg, #88c1ea 0%, #9cccf0 52%, #b0d8f5 100%);
+        background: linear-gradient(180deg, #8cc3ea 0%, #9dcdf0 52%, #b2daf5 100%);
     }
 
     .block-container {
-        max-width: 1420px;
-        padding-top: 0.6rem;
+        max-width: 1460px;
+        padding-top: 0.5rem;
         padding-bottom: 3rem;
     }
 
     .top-wrap {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     .top-title {
-        color: #f4f7fb;
-        font-size: 4.6rem;
+        color: #f5f7fb;
+        font-size: 4.55rem;
         font-weight: 800;
         line-height: 1.02;
         margin-bottom: 2rem;
@@ -363,20 +374,35 @@ st.markdown(
     }
 
     .top-step {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 0.95rem;
         font-weight: 700;
-        margin-bottom: 1.8rem;
+        margin-bottom: 1.75rem;
         opacity: 0.96;
     }
 
     .top-subtitle {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 3.05rem;
         font-weight: 800;
         line-height: 1.12;
-        margin-bottom: 2.15rem;
+        margin-bottom: 2rem;
         letter-spacing: -0.02em;
+    }
+
+    .progress-shell {
+        width: 92%;
+        height: 18px;
+        border: 1.2px solid rgba(255,255,255,0.72);
+        border-radius: 4px;
+        background: rgba(255,255,255,0.02);
+        overflow: hidden;
+        margin-bottom: 3.1rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: rgba(255,255,255,0.92);
     }
 
     .intro-box {
@@ -397,14 +423,14 @@ st.markdown(
     }
 
     .section-title {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 1.5rem;
         font-weight: 800;
         margin-bottom: 0.35rem;
     }
 
     .section-caption {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 0.98rem;
         font-style: italic;
         margin-bottom: 1.55rem;
@@ -412,15 +438,16 @@ st.markdown(
     }
 
     .question-box {
+        width: 92%;
         background: rgba(255,255,255,0.09);
-        border: 1.2px solid rgba(255,255,255,0.55);
+        border: 1.2px solid rgba(255,255,255,0.56);
         border-radius: 44px;
         padding: 1.65rem 1.75rem 1.05rem 1.75rem;
         margin-bottom: 1.7rem;
     }
 
     .question-number {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 0.95rem;
         font-weight: 700;
         margin-bottom: 0.55rem;
@@ -428,7 +455,7 @@ st.markdown(
     }
 
     .question-text {
-        color: #f7fbff;
+        color: #f8fbff;
         font-size: 1.12rem;
         font-weight: 800;
         line-height: 1.35;
@@ -436,7 +463,7 @@ st.markdown(
     }
 
     .anchor-text {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 0.96rem;
         font-style: italic;
         line-height: 1.45;
@@ -445,48 +472,31 @@ st.markdown(
     }
 
     .soft-note {
-        color: #f4f7fb;
+        color: #f5f7fb;
         font-size: 0.92rem;
         font-style: italic;
         margin-top: 0.6rem;
         opacity: 0.96;
     }
 
-    .stProgress {
-        margin-top: 0.05rem;
-        margin-bottom: 3.1rem;
-    }
-
-    .stProgress > div > div {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.70);
-        border-radius: 4px;
-        overflow: hidden;
-        height: 18px;
-    }
-
-    .stProgress > div > div > div > div {
-        background: rgba(255,255,255,0.92);
-    }
-
     div[role="radiogroup"] {
-        gap: 1.15rem;
+        gap: 1rem;
         margin-top: 0.2rem;
-        margin-bottom: 0.1rem;
+        margin-bottom: 0.05rem;
         flex-wrap: wrap;
     }
 
     div[role="radiogroup"] > label {
-        border: 1.2px solid rgba(255,255,255,0.38);
+        border: 1.2px solid rgba(255,255,255,0.40);
         border-radius: 999px;
-        padding: 0.46rem 1.05rem;
-        background: rgba(255,255,255,0.06);
-        min-width: 96px;
+        padding: 0.46rem 1.02rem;
+        background: rgba(255,255,255,0.05);
+        min-width: 94px;
         justify-content: center;
     }
 
     div[role="radiogroup"] > label span {
-        color: #273042 !important;
+        color: #2f3542 !important;
         font-weight: 700;
         font-size: 0.98rem;
     }
@@ -500,14 +510,14 @@ st.markdown(
     }
 
     .stButton > button[kind="primary"] {
-        background: #f4f7fb;
+        background: #f5f7fb;
         color: #5c95c5;
     }
 
     .stButton > button:not([kind="primary"]),
     .stDownloadButton > button {
         background: rgba(255,255,255,0.18);
-        color: #f4f7fb;
+        color: #f5f7fb;
         border: 1px solid rgba(255,255,255,0.20);
     }
 
@@ -520,7 +530,7 @@ st.markdown(
 
     div[data-testid="stMetric"] label,
     div[data-testid="stMetric"] div {
-        color: #f4f7fb !important;
+        color: #f5f7fb !important;
     }
 
     div[data-testid="stDataFrame"] {
@@ -536,12 +546,17 @@ st.markdown(
     }
 
     div[data-testid="stExpander"] summary p {
-        color: #f4f7fb !important;
+        color: #f5f7fb !important;
         font-weight: 700;
     }
 
     .stMarkdown, .stText, .stSubheader, .stHeader, .stCaption {
-        color: #f4f7fb !important;
+        color: #f5f7fb !important;
+    }
+
+    /* skjul streamlits egen progress helt */
+    .stProgress {
+        display: none;
     }
     </style>
     """,
@@ -556,20 +571,20 @@ if st.session_state.page == "intro":
     st.markdown(
         """
         <div class="intro-box">
-            <h3 style="color:#f4f7fb;">Hvad handler testen om?</h3>
-            <p style="color:#f4f7fb;">
+            <h3 style="color:#f5f7fb;">Hvad handler testen om?</h3>
+            <p style="color:#f5f7fb;">
                 Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
                 Testen sammenholder dine præferencer med data om blandt andet studieform,
                 arbejdsmarked, faglige interesser og arbejdsstil.
             </p>
-            <h3 style="color:#f4f7fb;">Hvorfor er den relevant?</h3>
-            <p style="color:#f4f7fb;">
+            <h3 style="color:#f5f7fb;">Hvorfor er den relevant?</h3>
+            <p style="color:#f5f7fb;">
                 Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
                 Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
                 og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
             </p>
-            <h3 style="color:#f4f7fb;">Hvordan fungerer den?</h3>
-            <p style="color:#f4f7fb;">
+            <h3 style="color:#f5f7fb;">Hvordan fungerer den?</h3>
+            <p style="color:#f5f7fb;">
                 Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
                 og viser de linjer, der matcher din profil bedst.
             </p>
@@ -599,7 +614,7 @@ elif st.session_state.page == "test":
         subtitle=GROUP_SUBTITLES[current_group],
     )
 
-    st.progress((st.session_state.step + 1) / len(GROUP_ORDER))
+    render_custom_progress((st.session_state.step + 1) / len(GROUP_ORDER))
 
     st.markdown('<div class="step-box">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
