@@ -330,6 +330,19 @@ def all_profile_columns_present(user_profile: dict) -> bool:
     return all(col in user_profile for col in required_cols)
 
 
+def render_test_header(step: int, total_steps: int, subtitle: str) -> None:
+    st.markdown(
+        f"""
+        <div class="top-wrap">
+            <div class="top-title">Kandidatesten - Cand.merc.</div>
+            <div class="top-step">Trin {step} af {total_steps}</div>
+            <div class="top-subtitle">{subtitle}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 st.markdown(
     """
     <style>
@@ -339,16 +352,37 @@ st.markdown(
 
     .block-container {
         max-width: 980px;
-        padding-top: 1.8rem;
+        padding-top: 1.3rem;
         padding-bottom: 2.5rem;
     }
 
-    .page-title-wrap h1,
-    .page-title-wrap h2,
-    .page-title-wrap h3,
-    .page-title-wrap p,
-    .page-title-wrap div {
-        color: #eef3f8 !important;
+    .top-wrap {
+        margin-bottom: 0.8rem;
+    }
+
+    .top-title {
+        color: #edf2f7;
+        font-size: 3.15rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.8rem;
+        letter-spacing: -0.02em;
+    }
+
+    .top-step {
+        color: #e2ebf3;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+    }
+
+    .top-subtitle {
+        color: #edf2f7;
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1.15;
+        margin-top: 1.6rem;
+        margin-bottom: 0.7rem;
     }
 
     .intro-box,
@@ -359,6 +393,14 @@ st.markdown(
         padding: 1.25rem 1.35rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
+    }
+
+    .page-title-wrap h1,
+    .page-title-wrap h2,
+    .page-title-wrap h3,
+    .page-title-wrap p,
+    .page-title-wrap div {
+        color: #eef3f8 !important;
     }
 
     .section-title {
@@ -467,11 +509,11 @@ st.markdown(
     }
 
     .stProgress > div > div {
-        background: rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.05);
     }
 
     .stProgress > div > div > div > div {
-        background: rgba(238,243,248,0.42);
+        background: rgba(238,243,248,0.34);
     }
 
     div[role="radiogroup"] {
@@ -491,10 +533,6 @@ st.markdown(
         color: #eef3f8 !important;
         font-weight: 600;
     }
-
-    div[data-testid="stHeader"] h2 {
-        color: #e3ebf2 !important;
-    }
     </style>
     """,
     unsafe_allow_html=True
@@ -504,7 +542,7 @@ init_state()
 
 if st.session_state.page == "intro":
     st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("Kandidatesten - Cand.merc.")
+    st.markdown('<div class="top-title">Kandidatesten - Cand.merc.</div>', unsafe_allow_html=True)
 
     st.markdown(
         """
@@ -547,12 +585,13 @@ elif st.session_state.page == "test":
 
     load_current_group_defaults(current_group)
 
-    st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("Kandidatesten - Cand.merc.")
-    st.caption(f"Trin {st.session_state.step + 1} af {len(GROUP_ORDER)}")
+    render_test_header(
+        step=st.session_state.step + 1,
+        total_steps=len(GROUP_ORDER),
+        subtitle=GROUP_SUBTITLES[current_group],
+    )
+
     st.progress((st.session_state.step + 1) / len(GROUP_ORDER))
-    st.header(GROUP_SUBTITLES[current_group])
-    st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="step-box">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
@@ -633,7 +672,7 @@ elif st.session_state.page == "result":
     group_weights = normalize_weights(raw_weights)
 
     st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("Kandidatesten - Cand.merc.")
+    st.markdown('<div class="top-title">Kandidatesten - Cand.merc.</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     if not all_profile_columns_present(user_profile):
