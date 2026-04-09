@@ -29,92 +29,169 @@ def load_line_data(path: Path) -> pd.DataFrame:
 
 LINE_DF = load_line_data(DATA_PATH)
 
+# ---------------------------------------------------
+# SPØRGESKEMA
+# Hvert item kan have:
+# - question
+# - anchor (undertekst)
+# - column (hvilken modelvariabel item måler)
+# - reverse (om skalaen skal vendes)
+#
+# Flere items kan pege på samme column.
+# I så fald tages gennemsnittet af de omkodede scores.
+# ---------------------------------------------------
 GROUPS = {
     "Arbejdsmarked": {
-        "Løn": {
-            "question": "Det er vigtigt for mig at have en højere løn end gennemsnittet for kandidater fra min årgang",
+        "Løn_main": {
+            "question": "Hvor vigtigt er det for dig at tjene mere end gennemsnittet for cand.merc.-kandidater?",
+            "anchor": "Den gennemsnitlige startløn for cand.merc.-kandidater ligger omkring XX kr., men du kan svare ud fra din egen opfattelse.",
             "column": "Løn",
+            "reverse": False,
         },
-        "Jobsikkerhed": {
-            "question": "Det er vigtigt for mig at have lavere risiko for ledighed end gennemsnittet for kandidater fra min årgang",
+        "Løn_reverse": {
+            "question": "Hvor uvigtigt er det for dig at tjene mere end gennemsnittet for cand.merc.-kandidater?",
+            "anchor": "Den gennemsnitlige startløn for cand.merc.-kandidater ligger omkring XX kr., men du kan svare ud fra din egen opfattelse.",
+            "column": "Løn",
+            "reverse": True,
+        },
+        "Jobsikkerhed_main": {
+            "question": "Hvor vigtigt er det for dig at have jobsikkerhed i dit fremtidige job?",
+            "anchor": "Jobsikkerhed kan fx forstås som lav risiko for ledighed efter endt uddannelse.",
             "column": "Jobsikkerhed",
+            "reverse": False,
         },
-        "karakter_avg": {
-            "question": "Det er vigtigt for mig at gå på en uddannelse, hvor studerende i gennemsnit opnår høje karakterer",
+        "karakter_avg_main": {
+            "question": "Hvor vigtigt er det for dig at opnå gode faglige resultater på studiet?",
+            "anchor": "Fx at opnå karakterer over gennemsnittet eller klare sig fagligt godt.",
             "column": "karakter_avg",
+            "reverse": False,
         },
     },
     "Studieform": {
-        "Skriftlig": {
-            "question": "Jeg foretrækker uddannelser med en høj andel af skriftlige eksamener",
+        "Skriftlig_main": {
+            "question": "Jeg foretrækker eksamener, hvor jeg skriver opgaver frem for mundtlige eksamener",
+            "anchor": "Fx hjemmeopgaver eller skriftlige afleveringer frem for mundtlige prøver.",
             "column": "Skriftlig",
+            "reverse": False,
         },
-        "Individuel": {
-            "question": "Jeg foretrækker uddannelser, hvor arbejde primært foregår individuelt frem for i grupper",
+        "Individuel_main": {
+            "question": "Jeg foretrækker at arbejde individuelt frem for i grupper",
+            "anchor": "Fx selvstændige opgaver frem for gruppearbejde og projekter.",
             "column": "Individuel",
+            "reverse": False,
         },
-        "timer_ects": {
-            "question": "Jeg foretrækker uddannelser med mange undervisningstimer pr. ECTS-point",
+        "Individuel_reverse": {
+            "question": "Jeg foretrækker at arbejde i grupper frem for individuelt",
+            "anchor": "Fx gruppearbejde og projekter frem for selvstændige opgaver.",
+            "column": "Individuel",
+            "reverse": True,
+        },
+        "timer_ects_main": {
+            "question": "Jeg foretrækker studier med meget undervisning frem for selvstudie",
+            "anchor": "Fx mange undervisningstimer frem for selvstændig læsning.",
             "column": "timer_ects",
+            "reverse": False,
         },
     },
     "Arbejdsstil – kognitiv/performance": {
-        "Adaptability": {
-            "question": "Jeg foretrækker opgaver, hvor krav og rammer ændrer sig løbende",
+        "Adaptability_main": {
+            "question": "Jeg trives med opgaver, hvor krav og rammer ofte ændrer sig",
+            "anchor": "Fx opgaver uden faste strukturer eller med løbende ændringer.",
             "column": "Adaptability",
+            "reverse": False,
         },
-        "AttentiontoDetail": {
-            "question": "Jeg foretrækker opgaver, hvor præcision og detaljer er afgørende",
+        "AttentiontoDetail_main": {
+            "question": "Jeg foretrækker opgaver, hvor præcision er vigtigere end tempo",
+            "anchor": "Fx opgaver hvor det er vigtigere at undgå fejl end at blive hurtigt færdig.",
             "column": "AttentiontoDetail",
+            "reverse": False,
         },
-        "Initiative": {
-            "question": "Jeg tager ofte selv initiativ til nye opgaver uden at blive bedt om det",
+        "AttentiontoDetail_reverse": {
+            "question": "Jeg foretrækker opgaver, hvor tempo er vigtigere end præcision",
+            "anchor": "Fx opgaver hvor det er vigtigere at blive hurtigt færdig end at undgå fejl.",
+            "column": "AttentiontoDetail",
+            "reverse": True,
+        },
+        "Initiative_main": {
+            "question": "Jeg tager initiativ til nye opgaver uden at blive bedt om det",
+            "anchor": "Fx selv at opsøge opgaver i studie- eller arbejdssammenhænge.",
             "column": "Initiative",
+            "reverse": False,
         },
     },
     "Arbejdsstil – social/ledelse": {
-        "Integrity": {
-            "question": "Jeg lægger vægt på at overholde regler og aftaler i mit arbejde",
+        "Integrity_main": {
+            "question": "Jeg foretrækker arbejde med klare regler og faste rammer",
+            "anchor": "Fx tydelige krav, procedurer og forventninger.",
             "column": "Integrity",
+            "reverse": False,
         },
-        "Empathy": {
-            "question": "Jeg tager ofte hensyn til andres perspektiver i mit arbejde",
+        "Empathy_main": {
+            "question": "Jeg inddrager andres perspektiver, før jeg træffer beslutninger",
+            "anchor": "Fx at diskutere løsninger med andre før du beslutter dig.",
             "column": "Empathy",
+            "reverse": False,
         },
-        "LeadershipOrientation": {
-            "question": "Jeg motiveres af at tage ansvar for at lede og koordinere andre",
+        "Empathy_reverse": {
+            "question": "Jeg træffer beslutninger uden i høj grad at inddrage andre",
+            "anchor": "Fx at tage beslutninger selv uden at diskutere dem med andre.",
+            "column": "Empathy",
+            "reverse": True,
+        },
+        "LeadershipOrientation_main": {
+            "question": "Jeg motiveres af at have ansvar for at lede og koordinere andre",
+            "anchor": "Fx at fordele opgaver eller tage ansvar i grupper.",
             "column": "LeadershipOrientation",
+            "reverse": False,
         },
     },
     "Faglige interesser": {
-        "LawandGovernment": {
-            "question": "Jeg interesserer mig for jura, regulering og offentlige forhold",
+        "LawandGovernment_main": {
+            "question": "Jeg interesserer mig for jura og regulering",
+            "anchor": "Fx regler, lovgivning og offentlige systemer.",
             "column": "LawandGovernment",
+            "reverse": False,
         },
-        "Mathematics": {
-            "question": "Jeg interesserer mig for matematik og kvantitative analyser",
+        "Mathematics_main": {
+            "question": "Jeg interesserer mig for matematik og talbaserede analyser",
+            "anchor": "Fx dataanalyse, statistik eller økonomiske beregninger.",
             "column": "Mathematics",
+            "reverse": False,
         },
-        "SalesandMarketing": {
-            "question": "Jeg interesserer mig for marketing, salg og forbrugeradfærd",
+        "Mathematics_reverse": {
+            "question": "Jeg foretrækker opgaver, der ikke involverer tal eller analyser",
+            "anchor": "Fx opgaver uden matematik, statistik eller dataanalyse.",
+            "column": "Mathematics",
+            "reverse": True,
+        },
+        "SalesandMarketing_main": {
+            "question": "Jeg interesserer mig for marketing og forbrugeradfærd",
+            "anchor": "Fx branding, reklame og kundeadfærd.",
             "column": "SalesandMarketing",
+            "reverse": False,
         },
     },
 }
 
 WEIGHT_QUESTIONS = {
-    "Arbejdsmarked": "Hvor vigtigt er arbejdsmarked og karrieremuligheder for dig i valget af kandidatlinje?",
-    "Studieform": "Hvor vigtigt er det for dig, at studieformen passer til dine præferencer?",
-    "Arbejdsstil – kognitiv/performance": "Hvor vigtigt er det for dig, at linjen matcher din måde at arbejde og præstere på?",
-    "Arbejdsstil – social/ledelse": "Hvor vigtigt er det for dig, at linjen matcher din sociale og ledelsesmæssige arbejdsstil?",
-    "Faglige interesser": "Hvor vigtigt er det for dig, at linjen matcher dine faglige interesser?",
+    "Arbejdsmarked": "Hvor stor betydning har arbejdsmarked og karrieremuligheder for dit valg af kandidatlinje?",
+    "Studieform": "I hvor høj grad prioriterer du, at studieformen passer til dine præferencer?",
+    "Arbejdsstil – kognitiv/performance": "Hvor vigtigt er det for dig, at uddannelsen matcher din måde at arbejde på?",
+    "Arbejdsstil – social/ledelse": "Hvor vigtigt er det for dig, at uddannelsen matcher din sociale arbejdsstil?",
+    "Faglige interesser": "Hvor vigtigt er det for dig, at uddannelsen matcher dine faglige interesser?",
 }
 
 GROUP_ORDER = list(GROUPS.keys())
 
 
-def response_to_zero_one(value: int) -> float:
-    return (value - 1) / 4
+def response_to_zero_one(value: int, reverse: bool = False) -> float:
+    scaled = (value - 1) / 4
+    return 1 - scaled if reverse else scaled
+
+
+def zero_one_to_response(value: float, reverse: bool = False) -> int:
+    scaled = 1 - value if reverse else value
+    return int(round(scaled * 4 + 1))
 
 
 def normalize_weights(raw_weights: dict) -> dict:
@@ -124,12 +201,22 @@ def normalize_weights(raw_weights: dict) -> dict:
     return {k: v / total for k, v in raw_weights.items()}
 
 
+def get_unique_group_columns(group_name: str) -> list[str]:
+    seen = set()
+    cols = []
+    for spec in GROUPS[group_name].values():
+        col = spec["column"]
+        if col not in seen:
+            seen.add(col)
+            cols.append(col)
+    return cols
+
+
 def compute_group_match(user_profile: dict, line_row: pd.Series, group_name: str) -> float:
-    specs = GROUPS[group_name]
+    cols = get_unique_group_columns(group_name)
     scores = []
 
-    for spec in specs.values():
-        col = spec["column"]
+    for col in cols:
         if col in user_profile and col in line_row.index and pd.notna(line_row[col]):
             scores.append(1 - abs(user_profile[col] - float(line_row[col])))
 
@@ -161,7 +248,8 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     line_vals = []
 
     for group in axis_labels:
-        cols = [spec["column"] for spec in GROUPS[group].values()]
+        cols = get_unique_group_columns(group)
+
         valid_user_vals = [user_profile[c] for c in cols if c in user_profile]
         valid_line_vals = [float(line_row[c]) for c in cols if c in line_row.index and pd.notna(line_row[c])]
 
@@ -193,6 +281,8 @@ def init_state():
         st.session_state.answers = {}
     if "weights" not in st.session_state:
         st.session_state.weights = {}
+    if "raw_answers" not in st.session_state:
+        st.session_state.raw_answers = {}
 
 
 def go_to_intro():
@@ -230,6 +320,7 @@ def reset_test():
             del st.session_state[key]
 
     st.session_state.answers = {}
+    st.session_state.raw_answers = {}
     st.session_state.weights = {}
     st.session_state.page = "intro"
     st.session_state.step = 0
@@ -238,12 +329,26 @@ def reset_test():
 def save_current_group_answers(group_name: str):
     items = GROUPS[group_name]
 
+    # gem rå widgetsvar
+    for key in items.keys():
+        widget_key = f"widget_profile_{key}"
+        answer = st.session_state.get(widget_key)
+        if answer is not None:
+            st.session_state.raw_answers[widget_key] = answer
+
+    # omkod og aggreger til modelvariabler
+    col_scores = {}
     for key, spec in items.items():
         widget_key = f"widget_profile_{key}"
         answer = st.session_state.get(widget_key)
         if answer is not None:
-            st.session_state.answers[spec["column"]] = response_to_zero_one(answer)
+            scaled = response_to_zero_one(answer, reverse=spec.get("reverse", False))
+            col_scores.setdefault(spec["column"], []).append(scaled)
 
+    for col, values in col_scores.items():
+        st.session_state.answers[col] = sum(values) / len(values)
+
+    # vægt
     weight_widget_key = f"widget_weight_{group_name}"
     weight_answer = st.session_state.get(weight_widget_key)
     if weight_answer is not None:
@@ -253,13 +358,10 @@ def save_current_group_answers(group_name: str):
 def load_current_group_defaults(group_name: str):
     items = GROUPS[group_name]
 
-    for key, spec in items.items():
+    for key in items.keys():
         widget_key = f"widget_profile_{key}"
-        col = spec["column"]
-
-        if widget_key not in st.session_state and col in st.session_state.answers:
-            saved = st.session_state.answers[col]
-            st.session_state[widget_key] = int(round(saved * 4 + 1))
+        if widget_key not in st.session_state and widget_key in st.session_state.raw_answers:
+            st.session_state[widget_key] = st.session_state.raw_answers[widget_key]
 
     weight_widget_key = f"widget_weight_{group_name}"
     if weight_widget_key not in st.session_state and group_name in st.session_state.weights:
@@ -279,11 +381,14 @@ def is_group_answered(group_name: str) -> bool:
 
 
 def all_profile_columns_present(user_profile: dict) -> bool:
-    required_cols = [
-        spec["column"]
-        for group in GROUPS.values()
-        for spec in group.values()
-    ]
+    required_cols = []
+    seen = set()
+    for group in GROUPS.values():
+        for spec in group.values():
+            col = spec["column"]
+            if col not in seen:
+                seen.add(col)
+                required_cols.append(col)
     return all(col in user_profile for col in required_cols)
 
 
@@ -309,6 +414,17 @@ st.markdown(
         border: 1px solid #ececec;
         margin-top: 1rem;
         margin-bottom: 1rem;
+    }
+
+    .question-box {
+        margin-bottom: 1.1rem;
+    }
+
+    .anchor-text {
+        color: #5f6368;
+        font-size: 0.92rem;
+        margin-top: -0.35rem;
+        margin-bottom: 0.35rem;
     }
 
     div[role="radiogroup"] {
@@ -365,6 +481,8 @@ if st.session_state.page == "intro":
         st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
         st.write(
             "Alle profilsvar omregnes fra 1–5 til 0–1. "
+            "Reverse-coded spørgsmål vendes automatisk om, og hvis en dimension måles af både et normalt og et reverse-coded spørgsmål, "
+            "beregnes den endelige profilsværdi som gennemsnittet af de to omkodede svar. "
             "Vægtene normaliseres automatisk, så de samlet summerer til 1."
         )
 
@@ -393,6 +511,7 @@ elif st.session_state.page == "test":
     st.caption("Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad")
 
     for key, spec in current_items.items():
+        st.markdown('<div class="question-box">', unsafe_allow_html=True)
         st.radio(
             spec["question"],
             options=[1, 2, 3, 4, 5],
@@ -400,9 +519,15 @@ elif st.session_state.page == "test":
             index=None,
             key=f"widget_profile_{key}"
         )
+        if spec.get("anchor"):
+            st.markdown(
+                f'<div class="anchor-text">{spec["anchor"]}</div>',
+                unsafe_allow_html=True
+            )
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("#### Vægtspørgsmål")
-    st.caption("Hvor vigtigt er dette område samlet set for dig i valget af kandidatlinje?")
+    st.caption("Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.")
 
     st.radio(
         WEIGHT_QUESTIONS[current_group],
@@ -504,6 +629,13 @@ elif st.session_state.page == "result":
         "Normaliseret vægt": [round(group_weights[g], 3) for g in group_weights],
     })
     st.dataframe(weights_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Din endelige profil (efter reverse-kodning og gennemsnit)")
+    profile_df = pd.DataFrame({
+        "Variabel": list(user_profile.keys()),
+        "Score (0-1)": [round(v, 3) for v in user_profile.values()],
+    })
+    st.dataframe(profile_df, use_container_width=True, hide_index=True)
 
     st.subheader("Alle linjer")
     st.dataframe(scores, use_container_width=True, hide_index=True)
