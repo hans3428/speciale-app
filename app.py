@@ -117,6 +117,14 @@ GROUPS = {
     },
 }
 
+GROUP_SUBTITLES = {
+    "Arbejdsmarked": "Spørgsmål vedrørende arbejdsmarkedsfaktorer",
+    "Studieform": "Spørgsmål vedrørende studieform",
+    "Arbejdsstil – kognitiv/performance": "Spørgsmål vedrørende kognitiv arbejdsstil og performance",
+    "Arbejdsstil – social/ledelse": "Spørgsmål vedrørende social arbejdsstil og ledelse",
+    "Faglige interesser": "Spørgsmål vedrørende faglige interesser",
+}
+
 WEIGHT_QUESTIONS = {
     "Arbejdsmarked": "Hvor stor betydning har arbejdsmarked og karrieremuligheder for dit valg af kandidatlinje?",
     "Studieform": "I hvor høj grad prioriterer du, at studieformen passer til dine præferencer?",
@@ -326,7 +334,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #3d8fd1 0%, #4da0dd 55%, #69b7ea 100%);
+        background: linear-gradient(135deg, #4b9cda 0%, #5dabe3 55%, #79c0ed 100%);
     }
 
     .block-container {
@@ -345,8 +353,8 @@ st.markdown(
 
     .intro-box,
     .step-box {
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.10);
         border-radius: 18px;
         padding: 1.25rem 1.35rem;
         margin-top: 1rem;
@@ -459,11 +467,11 @@ st.markdown(
     }
 
     .stProgress > div > div {
-        background: rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.08);
     }
 
     .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #eef3f8 0%, #dbe5ee 100%);
+        background: rgba(238,243,248,0.42);
     }
 
     div[role="radiogroup"] {
@@ -483,6 +491,10 @@ st.markdown(
         color: #eef3f8 !important;
         font-weight: 600;
     }
+
+    div[data-testid="stHeader"] h2 {
+        color: #e3ebf2 !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -492,7 +504,7 @@ init_state()
 
 if st.session_state.page == "intro":
     st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("🎓 Kandidatesten - Cand.merc.")
+    st.title("Kandidatesten - Cand.merc.")
 
     st.markdown(
         """
@@ -536,10 +548,10 @@ elif st.session_state.page == "test":
     load_current_group_defaults(current_group)
 
     st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("🎓 Kandidatesten - Cand.merc.")
+    st.title("Kandidatesten - Cand.merc.")
     st.caption(f"Trin {st.session_state.step + 1} af {len(GROUP_ORDER)}")
     st.progress((st.session_state.step + 1) / len(GROUP_ORDER))
-    st.header(current_group)
+    st.header(GROUP_SUBTITLES[current_group])
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="step-box">', unsafe_allow_html=True)
@@ -621,7 +633,7 @@ elif st.session_state.page == "result":
     group_weights = normalize_weights(raw_weights)
 
     st.markdown('<div class="page-title-wrap">', unsafe_allow_html=True)
-    st.title("🎓 Dit resultat")
+    st.title("Kandidatesten - Cand.merc.")
     st.markdown("</div>", unsafe_allow_html=True)
 
     if not all_profile_columns_present(user_profile):
