@@ -340,22 +340,22 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(180deg, #82bee9 0%, #93c9ee 45%, #a8d5f3 100%);
+        background: linear-gradient(180deg, #88c1ea 0%, #9cccf0 52%, #b0d8f5 100%);
     }
 
     .block-container {
-        max-width: 980px;
-        padding-top: 2.2rem;
+        max-width: 1420px;
+        padding-top: 0.6rem;
         padding-bottom: 3rem;
     }
 
     .top-wrap {
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
     }
 
     .top-title {
-        color: #f3f7fb;
-        font-size: 4rem;
+        color: #f4f7fb;
+        font-size: 4.6rem;
         font-weight: 800;
         line-height: 1.02;
         margin-bottom: 2rem;
@@ -363,26 +363,27 @@ st.markdown(
     }
 
     .top-step {
-        color: rgba(243,247,251,0.92);
+        color: #f4f7fb;
         font-size: 0.95rem;
-        font-weight: 600;
-        margin-bottom: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1.8rem;
+        opacity: 0.96;
     }
 
     .top-subtitle {
-        color: #f3f7fb;
-        font-size: 2.9rem;
+        color: #f4f7fb;
+        font-size: 3.05rem;
         font-weight: 800;
         line-height: 1.12;
-        margin-bottom: 1.45rem;
+        margin-bottom: 2.15rem;
         letter-spacing: -0.02em;
     }
 
     .intro-box {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.16);
-        border-radius: 24px;
-        padding: 1.4rem 1.5rem;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 28px;
+        padding: 1.5rem 1.6rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
@@ -391,153 +392,156 @@ st.markdown(
         background: transparent;
         border: none;
         padding: 0;
-        margin-top: 0.8rem;
+        margin-top: 0;
         margin-bottom: 1rem;
     }
 
     .section-title {
-        color: #f3f7fb;
-        font-size: 1.25rem;
+        color: #f4f7fb;
+        font-size: 1.5rem;
         font-weight: 800;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.35rem;
     }
 
     .section-caption {
-        color: rgba(243,247,251,0.93);
-        font-size: 0.97rem;
+        color: #f4f7fb;
+        font-size: 0.98rem;
         font-style: italic;
-        margin-bottom: 1.35rem;
+        margin-bottom: 1.55rem;
+        opacity: 0.96;
     }
 
     .question-box {
-        background: rgba(255,255,255,0.12);
-        border: 1.2px solid rgba(255,255,255,0.34);
-        border-radius: 34px;
-        padding: 1.55rem 1.6rem 1rem 1.6rem;
-        margin-bottom: 1.55rem;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        background: rgba(255,255,255,0.09);
+        border: 1.2px solid rgba(255,255,255,0.55);
+        border-radius: 44px;
+        padding: 1.65rem 1.75rem 1.05rem 1.75rem;
+        margin-bottom: 1.7rem;
     }
 
     .question-number {
-        color: #eef4f9;
+        color: #f4f7fb;
         font-size: 0.95rem;
         font-weight: 700;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.55rem;
+        opacity: 0.96;
     }
 
     .question-text {
         color: #f7fbff;
-        font-size: 1.08rem;
+        font-size: 1.12rem;
         font-weight: 800;
         line-height: 1.35;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.38rem;
     }
 
     .anchor-text {
-        color: rgba(243,247,251,0.94);
+        color: #f4f7fb;
         font-size: 0.96rem;
         font-style: italic;
         line-height: 1.45;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.8rem;
+        opacity: 0.96;
     }
 
     .soft-note {
-        color: rgba(243,247,251,0.95);
+        color: #f4f7fb;
         font-size: 0.92rem;
         font-style: italic;
         margin-top: 0.6rem;
+        opacity: 0.96;
     }
 
     .stProgress {
-        margin-top: 0.25rem;
-        margin-bottom: 2rem;
+        margin-top: 0.05rem;
+        margin-bottom: 3.1rem;
     }
 
     .stProgress > div > div {
-        background: rgba(255,255,255,0.18);
-        border: 1px solid rgba(255,255,255,0.34);
-        border-radius: 999px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.70);
+        border-radius: 4px;
         overflow: hidden;
+        height: 18px;
     }
 
     .stProgress > div > div > div > div {
-        background: rgba(255,255,255,0.82);
+        background: rgba(255,255,255,0.92);
     }
 
     div[role="radiogroup"] {
-        gap: 1rem;
-        margin-top: 0.15rem;
-        margin-bottom: 0.3rem;
+        gap: 1.15rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.1rem;
         flex-wrap: wrap;
     }
 
     div[role="radiogroup"] > label {
-        border: 1.2px solid rgba(255,255,255,0.34);
+        border: 1.2px solid rgba(255,255,255,0.38);
         border-radius: 999px;
-        padding: 0.45rem 1rem;
-        background: rgba(255,255,255,0.10);
-        min-width: 82px;
+        padding: 0.46rem 1.05rem;
+        background: rgba(255,255,255,0.06);
+        min-width: 96px;
         justify-content: center;
     }
 
     div[role="radiogroup"] > label span {
-        color: #f3f7fb !important;
+        color: #273042 !important;
         font-weight: 700;
+        font-size: 0.98rem;
     }
 
     .stButton > button,
     .stDownloadButton > button {
         border-radius: 999px;
         border: none;
-        padding: 0.55rem 1.15rem;
+        padding: 0.58rem 1.18rem;
         font-weight: 700;
     }
 
     .stButton > button[kind="primary"] {
-        background: #f3f7fb;
-        color: #4f90c6;
+        background: #f4f7fb;
+        color: #5c95c5;
     }
 
     .stButton > button:not([kind="primary"]),
     .stDownloadButton > button {
-        background: rgba(255,255,255,0.14);
-        color: #f3f7fb;
-        border: 1px solid rgba(255,255,255,0.18);
+        background: rgba(255,255,255,0.18);
+        color: #f4f7fb;
+        border: 1px solid rgba(255,255,255,0.20);
     }
 
     div[data-testid="stMetric"] {
         background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.14);
-        border-radius: 18px;
-        padding: 0.75rem 0.9rem;
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 20px;
+        padding: 0.8rem 0.95rem;
     }
 
     div[data-testid="stMetric"] label,
     div[data-testid="stMetric"] div {
-        color: #f3f7fb !important;
+        color: #f4f7fb !important;
     }
 
     div[data-testid="stDataFrame"] {
         background: rgba(255,255,255,0.98);
-        border-radius: 16px;
-        padding: 0.22rem;
+        border-radius: 18px;
+        padding: 0.25rem;
     }
 
     div[data-testid="stExpander"] {
-        background: rgba(255,255,255,0.08);
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.10);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.18);
     }
 
     div[data-testid="stExpander"] summary p {
-        color: #f3f7fb !important;
+        color: #f4f7fb !important;
         font-weight: 700;
     }
 
     .stMarkdown, .stText, .stSubheader, .stHeader, .stCaption {
-        color: #f3f7fb !important;
+        color: #f4f7fb !important;
     }
     </style>
     """,
@@ -552,20 +556,20 @@ if st.session_state.page == "intro":
     st.markdown(
         """
         <div class="intro-box">
-            <h3 style="color:#f3f7fb;">Hvad handler testen om?</h3>
-            <p style="color:#f3f7fb;">
+            <h3 style="color:#f4f7fb;">Hvad handler testen om?</h3>
+            <p style="color:#f4f7fb;">
                 Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
                 Testen sammenholder dine præferencer med data om blandt andet studieform,
                 arbejdsmarked, faglige interesser og arbejdsstil.
             </p>
-            <h3 style="color:#f3f7fb;">Hvorfor er den relevant?</h3>
-            <p style="color:#f3f7fb;">
+            <h3 style="color:#f4f7fb;">Hvorfor er den relevant?</h3>
+            <p style="color:#f4f7fb;">
                 Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
                 Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
                 og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
             </p>
-            <h3 style="color:#f3f7fb;">Hvordan fungerer den?</h3>
-            <p style="color:#f3f7fb;">
+            <h3 style="color:#f4f7fb;">Hvordan fungerer den?</h3>
+            <p style="color:#f4f7fb;">
                 Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
                 og viser de linjer, der matcher din profil bedst.
             </p>
