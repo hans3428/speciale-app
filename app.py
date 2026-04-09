@@ -31,144 +31,95 @@ LINE_DF = load_line_data(DATA_PATH)
 
 # ---------------------------------------------------
 # SPØRGESKEMA
-# Hvert item kan have:
+# Hvert item har:
 # - question
 # - anchor (undertekst)
 # - column (hvilken modelvariabel item måler)
-# - reverse (om skalaen skal vendes)
-#
-# Flere items kan pege på samme column.
-# I så fald tages gennemsnittet af de omkodede scores.
 # ---------------------------------------------------
 GROUPS = {
     "Arbejdsmarked": {
-        "Løn_main": {
+        "Løn": {
             "question": "Hvor vigtigt er det for dig at tjene mere end gennemsnittet for cand.merc.-kandidater?",
             "anchor": "Den gennemsnitlige startløn for cand.merc.-kandidater ligger omkring XX kr., men du kan svare ud fra din egen opfattelse.",
             "column": "Løn",
-            "reverse": False,
         },
-        "Løn_reverse": {
-            "question": "Hvor uvigtigt er det for dig at tjene mere end gennemsnittet for cand.merc.-kandidater?",
-            "anchor": "Den gennemsnitlige startløn for cand.merc.-kandidater ligger omkring XX kr., men du kan svare ud fra din egen opfattelse.",
-            "column": "Løn",
-            "reverse": True,
-        },
-        "Jobsikkerhed_main": {
+        "Jobsikkerhed": {
             "question": "Hvor vigtigt er det for dig at have jobsikkerhed i dit fremtidige job?",
             "anchor": "Jobsikkerhed kan fx forstås som lav risiko for ledighed efter endt uddannelse.",
             "column": "Jobsikkerhed",
-            "reverse": False,
         },
-        "karakter_avg_main": {
+        "karakter_avg": {
             "question": "Hvor vigtigt er det for dig at opnå gode faglige resultater på studiet?",
             "anchor": "Fx at opnå karakterer over gennemsnittet eller klare sig fagligt godt.",
             "column": "karakter_avg",
-            "reverse": False,
         },
     },
     "Studieform": {
-        "Skriftlig_main": {
+        "Skriftlig": {
             "question": "Jeg foretrækker eksamener, hvor jeg skriver opgaver frem for mundtlige eksamener",
             "anchor": "Fx hjemmeopgaver eller skriftlige afleveringer frem for mundtlige prøver.",
             "column": "Skriftlig",
-            "reverse": False,
         },
-        "Individuel_main": {
+        "Individuel": {
             "question": "Jeg foretrækker at arbejde individuelt frem for i grupper",
             "anchor": "Fx selvstændige opgaver frem for gruppearbejde og projekter.",
             "column": "Individuel",
-            "reverse": False,
         },
-        "Individuel_reverse": {
-            "question": "Jeg foretrækker at arbejde i grupper frem for individuelt",
-            "anchor": "Fx gruppearbejde og projekter frem for selvstændige opgaver.",
-            "column": "Individuel",
-            "reverse": True,
-        },
-        "timer_ects_main": {
+        "timer_ects": {
             "question": "Jeg foretrækker studier med meget undervisning frem for selvstudie",
             "anchor": "Fx mange undervisningstimer frem for selvstændig læsning.",
             "column": "timer_ects",
-            "reverse": False,
         },
     },
     "Arbejdsstil – kognitiv/performance": {
-        "Adaptability_main": {
+        "Adaptability": {
             "question": "Jeg trives med opgaver, hvor krav og rammer ofte ændrer sig",
             "anchor": "Fx opgaver uden faste strukturer eller med løbende ændringer.",
             "column": "Adaptability",
-            "reverse": False,
         },
-        "AttentiontoDetail_main": {
+        "AttentiontoDetail": {
             "question": "Jeg foretrækker opgaver, hvor præcision er vigtigere end tempo",
             "anchor": "Fx opgaver hvor det er vigtigere at undgå fejl end at blive hurtigt færdig.",
             "column": "AttentiontoDetail",
-            "reverse": False,
         },
-        "AttentiontoDetail_reverse": {
-            "question": "Jeg foretrækker opgaver, hvor tempo er vigtigere end præcision",
-            "anchor": "Fx opgaver hvor det er vigtigere at blive hurtigt færdig end at undgå fejl.",
-            "column": "AttentiontoDetail",
-            "reverse": True,
-        },
-        "Initiative_main": {
+        "Initiative": {
             "question": "Jeg tager initiativ til nye opgaver uden at blive bedt om det",
             "anchor": "Fx selv at opsøge opgaver i studie- eller arbejdssammenhænge.",
             "column": "Initiative",
-            "reverse": False,
         },
     },
     "Arbejdsstil – social/ledelse": {
-        "Integrity_main": {
+        "Integrity": {
             "question": "Jeg foretrækker arbejde med klare regler og faste rammer",
             "anchor": "Fx tydelige krav, procedurer og forventninger.",
             "column": "Integrity",
-            "reverse": False,
         },
-        "Empathy_main": {
+        "Empathy": {
             "question": "Jeg inddrager andres perspektiver, før jeg træffer beslutninger",
             "anchor": "Fx at diskutere løsninger med andre før du beslutter dig.",
             "column": "Empathy",
-            "reverse": False,
         },
-        "Empathy_reverse": {
-            "question": "Jeg træffer beslutninger uden i høj grad at inddrage andre",
-            "anchor": "Fx at tage beslutninger selv uden at diskutere dem med andre.",
-            "column": "Empathy",
-            "reverse": True,
-        },
-        "LeadershipOrientation_main": {
+        "LeadershipOrientation": {
             "question": "Jeg motiveres af at have ansvar for at lede og koordinere andre",
             "anchor": "Fx at fordele opgaver eller tage ansvar i grupper.",
             "column": "LeadershipOrientation",
-            "reverse": False,
         },
     },
     "Faglige interesser": {
-        "LawandGovernment_main": {
+        "LawandGovernment": {
             "question": "Jeg interesserer mig for jura og regulering",
             "anchor": "Fx regler, lovgivning og offentlige systemer.",
             "column": "LawandGovernment",
-            "reverse": False,
         },
-        "Mathematics_main": {
+        "Mathematics": {
             "question": "Jeg interesserer mig for matematik og talbaserede analyser",
             "anchor": "Fx dataanalyse, statistik eller økonomiske beregninger.",
             "column": "Mathematics",
-            "reverse": False,
         },
-        "Mathematics_reverse": {
-            "question": "Jeg foretrækker opgaver, der ikke involverer tal eller analyser",
-            "anchor": "Fx opgaver uden matematik, statistik eller dataanalyse.",
-            "column": "Mathematics",
-            "reverse": True,
-        },
-        "SalesandMarketing_main": {
+        "SalesandMarketing": {
             "question": "Jeg interesserer mig for marketing og forbrugeradfærd",
             "anchor": "Fx branding, reklame og kundeadfærd.",
             "column": "SalesandMarketing",
-            "reverse": False,
         },
     },
 }
@@ -184,14 +135,8 @@ WEIGHT_QUESTIONS = {
 GROUP_ORDER = list(GROUPS.keys())
 
 
-def response_to_zero_one(value: int, reverse: bool = False) -> float:
-    scaled = (value - 1) / 4
-    return 1 - scaled if reverse else scaled
-
-
-def zero_one_to_response(value: float, reverse: bool = False) -> int:
-    scaled = 1 - value if reverse else value
-    return int(round(scaled * 4 + 1))
+def response_to_zero_one(value: int) -> float:
+    return (value - 1) / 4
 
 
 def normalize_weights(raw_weights: dict) -> dict:
@@ -329,26 +274,18 @@ def reset_test():
 def save_current_group_answers(group_name: str):
     items = GROUPS[group_name]
 
-    # gem rå widgetsvar
     for key in items.keys():
         widget_key = f"widget_profile_{key}"
         answer = st.session_state.get(widget_key)
         if answer is not None:
             st.session_state.raw_answers[widget_key] = answer
 
-    # omkod og aggreger til modelvariabler
-    col_scores = {}
     for key, spec in items.items():
         widget_key = f"widget_profile_{key}"
         answer = st.session_state.get(widget_key)
         if answer is not None:
-            scaled = response_to_zero_one(answer, reverse=spec.get("reverse", False))
-            col_scores.setdefault(spec["column"], []).append(scaled)
+            st.session_state.answers[spec["column"]] = response_to_zero_one(answer)
 
-    for col, values in col_scores.items():
-        st.session_state.answers[col] = sum(values) / len(values)
-
-    # vægt
     weight_widget_key = f"widget_weight_{group_name}"
     weight_answer = st.session_state.get(weight_widget_key)
     if weight_answer is not None:
@@ -481,9 +418,7 @@ if st.session_state.page == "intro":
         st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
         st.write(
             "Alle profilsvar omregnes fra 1–5 til 0–1. "
-            "Reverse-coded spørgsmål vendes automatisk om, og hvis en dimension måles af både et normalt og et reverse-coded spørgsmål, "
-            "beregnes den endelige profilsværdi som gennemsnittet af de to omkodede svar. "
-            "Vægtene normaliseres automatisk, så de samlet summerer til 1."
+            "Hvert spørgsmål måler én dimension, og vægtene normaliseres automatisk, så de samlet summerer til 1."
         )
 
     st.button("Start testen", type="primary", on_click=go_to_test)
@@ -630,7 +565,7 @@ elif st.session_state.page == "result":
     })
     st.dataframe(weights_df, use_container_width=True, hide_index=True)
 
-    st.subheader("Din endelige profil (efter reverse-kodning og gennemsnit)")
+    st.subheader("Din profil")
     profile_df = pd.DataFrame({
         "Variabel": list(user_profile.keys()),
         "Score (0-1)": [round(v, 3) for v in user_profile.values()],
