@@ -352,20 +352,20 @@ st.markdown(
 
     .block-container {
         max-width: 980px;
-        padding-top: 1.3rem;
+        padding-top: 2.9rem;
         padding-bottom: 2.5rem;
     }
 
     .top-wrap {
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.65rem;
     }
 
     .top-title {
         color: #edf2f7;
-        font-size: 3.15rem;
+        font-size: 3.1rem;
         font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 1.8rem;
+        line-height: 1.08;
+        margin-bottom: 1.9rem;
         letter-spacing: -0.02em;
     }
 
@@ -373,26 +373,35 @@ st.markdown(
         color: #e2ebf3;
         font-size: 0.95rem;
         font-weight: 600;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.35rem;
     }
 
     .top-subtitle {
         color: #edf2f7;
-        font-size: 2.2rem;
+        font-size: 2.18rem;
         font-weight: 700;
         line-height: 1.15;
-        margin-top: 1.6rem;
-        margin-bottom: 0.7rem;
+        margin-top: 1.55rem;
+        margin-bottom: 0.65rem;
     }
 
-    .intro-box,
-    .step-box {
+    .intro-box {
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(255, 255, 255, 0.10);
         border-radius: 18px;
         padding: 1.25rem 1.35rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
+    }
+
+    .step-box {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        margin-top: 1.15rem;
+        margin-bottom: 1rem;
+        box-shadow: none;
     }
 
     .page-title-wrap h1,
@@ -508,12 +517,17 @@ st.markdown(
         font-weight: 600;
     }
 
+    .stProgress {
+        margin-top: 0.15rem;
+        margin-bottom: 1.4rem;
+    }
+
     .stProgress > div > div {
-        background: rgba(255,255,255,0.05);
+        background: rgba(255,255,255,0.03);
     }
 
     .stProgress > div > div > div > div {
-        background: rgba(238,243,248,0.34);
+        background: rgba(238,243,248,0.72);
     }
 
     div[role="radiogroup"] {
