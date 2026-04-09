@@ -340,49 +340,49 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #72b5e4 0%, #86c2eb 52%, #a7d5f3 100%);
+        background: linear-gradient(180deg, #82bee9 0%, #93c9ee 45%, #a8d5f3 100%);
     }
 
     .block-container {
         max-width: 980px;
-        padding-top: 2.8rem;
-        padding-bottom: 2.4rem;
+        padding-top: 2.2rem;
+        padding-bottom: 3rem;
     }
 
     .top-wrap {
-        margin-bottom: 0.65rem;
+        margin-bottom: 0.75rem;
     }
 
     .top-title {
-        color: #edf2f7;
-        font-size: 3rem;
+        color: #f3f7fb;
+        font-size: 4rem;
         font-weight: 800;
-        line-height: 1.08;
-        margin-bottom: 1.8rem;
-        letter-spacing: -0.02em;
+        line-height: 1.02;
+        margin-bottom: 2rem;
+        letter-spacing: -0.03em;
     }
 
     .top-step {
-        color: #e4ecf3;
+        color: rgba(243,247,251,0.92);
         font-size: 0.95rem;
         font-weight: 600;
-        margin-bottom: 0.35rem;
+        margin-bottom: 1.4rem;
     }
 
     .top-subtitle {
-        color: #edf2f7;
-        font-size: 2.1rem;
-        font-weight: 700;
-        line-height: 1.15;
-        margin-top: 1.55rem;
-        margin-bottom: 0.7rem;
+        color: #f3f7fb;
+        font-size: 2.9rem;
+        font-weight: 800;
+        line-height: 1.12;
+        margin-bottom: 1.45rem;
+        letter-spacing: -0.02em;
     }
 
     .intro-box {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.10);
-        border-radius: 18px;
-        padding: 1.25rem 1.35rem;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 24px;
+        padding: 1.4rem 1.5rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
@@ -391,151 +391,153 @@ st.markdown(
         background: transparent;
         border: none;
         padding: 0;
-        margin-top: 1.1rem;
+        margin-top: 0.8rem;
         margin-bottom: 1rem;
-        box-shadow: none;
     }
 
     .section-title {
-        color: #eef3f8;
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 0.2rem;
+        color: #f3f7fb;
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
     }
 
     .section-caption {
-        color: #e3ebf2;
-        font-size: 0.98rem;
+        color: rgba(243,247,251,0.93);
+        font-size: 0.97rem;
         font-style: italic;
-        margin-bottom: 1rem;
+        margin-bottom: 1.35rem;
     }
 
     .question-box {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 20px;
-        padding: 1rem 1.1rem 0.35rem 1.1rem;
-        margin-bottom: 1.3rem;
+        background: rgba(255,255,255,0.12);
+        border: 1.2px solid rgba(255,255,255,0.34);
+        border-radius: 34px;
+        padding: 1.55rem 1.6rem 1rem 1.6rem;
+        margin-bottom: 1.55rem;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
     }
 
     .question-number {
-        color: #dbe5ee;
+        color: #eef4f9;
         font-size: 0.95rem;
         font-weight: 700;
-        margin-bottom: 0.25rem;
-    }
-
-    .question-text {
-        color: #eef3f8;
-        font-size: 1.05rem;
-        font-weight: 700;
-        line-height: 1.35;
-        margin-bottom: 0.22rem;
-    }
-
-    .anchor-text {
-        color: #dfe8f0;
-        font-size: 0.95rem;
-        font-style: italic;
-        line-height: 1.45;
         margin-bottom: 0.4rem;
     }
 
+    .question-text {
+        color: #f7fbff;
+        font-size: 1.08rem;
+        font-weight: 800;
+        line-height: 1.35;
+        margin-bottom: 0.3rem;
+    }
+
+    .anchor-text {
+        color: rgba(243,247,251,0.94);
+        font-size: 0.96rem;
+        font-style: italic;
+        line-height: 1.45;
+        margin-bottom: 0.75rem;
+    }
+
     .soft-note {
-        color: #e3ebf2;
+        color: rgba(243,247,251,0.95);
         font-size: 0.92rem;
         font-style: italic;
         margin-top: 0.6rem;
     }
 
-    .stCaption {
-        color: #e3ebf2 !important;
+    .stProgress {
+        margin-top: 0.25rem;
+        margin-bottom: 2rem;
     }
 
-    .stMarkdown, .stText, .stSubheader, .stHeader {
-        color: #eef3f8 !important;
+    .stProgress > div > div {
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.34);
+        border-radius: 999px;
+        overflow: hidden;
     }
 
-    div[data-testid="stMetric"] {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 14px;
-        padding: 0.7rem 0.9rem;
+    .stProgress > div > div > div > div {
+        background: rgba(255,255,255,0.82);
     }
 
-    div[data-testid="stMetric"] label,
-    div[data-testid="stMetric"] div {
-        color: #eef3f8 !important;
+    div[role="radiogroup"] {
+        gap: 1rem;
+        margin-top: 0.15rem;
+        margin-bottom: 0.3rem;
+        flex-wrap: wrap;
     }
 
-    div[data-testid="stDataFrame"] {
-        background: rgba(255,255,255,0.97);
-        border-radius: 14px;
-        padding: 0.2rem;
+    div[role="radiogroup"] > label {
+        border: 1.2px solid rgba(255,255,255,0.34);
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+        background: rgba(255,255,255,0.10);
+        min-width: 82px;
+        justify-content: center;
+    }
+
+    div[role="radiogroup"] > label span {
+        color: #f3f7fb !important;
+        font-weight: 700;
     }
 
     .stButton > button,
     .stDownloadButton > button {
         border-radius: 999px;
         border: none;
-        padding: 0.5rem 1.1rem;
-        font-weight: 600;
+        padding: 0.55rem 1.15rem;
+        font-weight: 700;
     }
 
     .stButton > button[kind="primary"] {
-        background: #eef3f8;
-        color: #2f6ca0;
+        background: #f3f7fb;
+        color: #4f90c6;
     }
 
     .stButton > button:not([kind="primary"]),
     .stDownloadButton > button {
         background: rgba(255,255,255,0.14);
-        color: #eef3f8;
-        border: 1px solid rgba(255,255,255,0.16);
+        color: #f3f7fb;
+        border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    div[data-testid="stMetric"] {
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 18px;
+        padding: 0.75rem 0.9rem;
+    }
+
+    div[data-testid="stMetric"] label,
+    div[data-testid="stMetric"] div {
+        color: #f3f7fb !important;
+    }
+
+    div[data-testid="stDataFrame"] {
+        background: rgba(255,255,255,0.98);
+        border-radius: 16px;
+        padding: 0.22rem;
     }
 
     div[data-testid="stExpander"] {
         background: rgba(255,255,255,0.08);
-        border-radius: 14px;
-        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.14);
     }
 
     div[data-testid="stExpander"] summary p {
-        color: #eef3f8 !important;
-        font-weight: 600;
+        color: #f3f7fb !important;
+        font-weight: 700;
     }
 
-    .stProgress {
-        margin-top: 0.15rem;
-        margin-bottom: 1.4rem;
-    }
-
-    .stProgress > div > div {
-        background: rgba(255,255,255,0.02);
-    }
-
-    .stProgress > div > div > div > div {
-        background: rgba(238,243,248,0.78);
-    }
-
-    div[role="radiogroup"] {
-        gap: 0.9rem;
-        margin-top: 0.25rem;
-        margin-bottom: 0.75rem;
-    }
-
-    div[role="radiogroup"] > label {
-        border: 1px solid rgba(255,255,255,0.28);
-        border-radius: 999px;
-        padding: 0.35rem 0.9rem;
-        background: rgba(255,255,255,0.10);
-    }
-
-    div[role="radiogroup"] > label span {
-        color: #eef3f8 !important;
-        font-weight: 600;
+    .stMarkdown, .stText, .stSubheader, .stHeader, .stCaption {
+        color: #f3f7fb !important;
     }
     </style>
     """,
@@ -550,20 +552,20 @@ if st.session_state.page == "intro":
     st.markdown(
         """
         <div class="intro-box">
-            <h3 style="color:#eef3f8;">Hvad handler testen om?</h3>
-            <p style="color:#eef3f8;">
+            <h3 style="color:#f3f7fb;">Hvad handler testen om?</h3>
+            <p style="color:#f3f7fb;">
                 Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
                 Testen sammenholder dine præferencer med data om blandt andet studieform,
                 arbejdsmarked, faglige interesser og arbejdsstil.
             </p>
-            <h3 style="color:#eef3f8;">Hvorfor er den relevant?</h3>
-            <p style="color:#eef3f8;">
+            <h3 style="color:#f3f7fb;">Hvorfor er den relevant?</h3>
+            <p style="color:#f3f7fb;">
                 Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
                 Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
                 og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
             </p>
-            <h3 style="color:#eef3f8;">Hvordan fungerer den?</h3>
-            <p style="color:#eef3f8;">
+            <h3 style="color:#f3f7fb;">Hvordan fungerer den?</h3>
+            <p style="color:#f3f7fb;">
                 Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
                 og viser de linjer, der matcher din profil bedst.
             </p>
