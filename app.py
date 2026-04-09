@@ -29,13 +29,6 @@ def load_line_data(path: Path) -> pd.DataFrame:
 
 LINE_DF = load_line_data(DATA_PATH)
 
-# ---------------------------------------------------
-# SPØRGESKEMA
-# Hvert item har:
-# - question
-# - anchor (undertekst)
-# - column (hvilken modelvariabel item måler)
-# ---------------------------------------------------
 GROUPS = {
     "Arbejdsmarked": {
         "Løn": {
@@ -354,19 +347,25 @@ st.markdown(
     }
 
     .question-box {
-        margin-bottom: 1.1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .question-text {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
     }
 
     .anchor-text {
         color: #5f6368;
         font-size: 0.92rem;
-        margin-top: -0.35rem;
-        margin-bottom: 0.35rem;
+        margin-top: 0rem;
+        margin-bottom: 0.65rem;
     }
 
     div[role="radiogroup"] {
         gap: 0.9rem;
-        margin-top: 0.3rem;
+        margin-top: 0.1rem;
         margin-bottom: 1rem;
     }
 
@@ -447,18 +446,27 @@ elif st.session_state.page == "test":
 
     for key, spec in current_items.items():
         st.markdown('<div class="question-box">', unsafe_allow_html=True)
-        st.radio(
-            spec["question"],
-            options=[1, 2, 3, 4, 5],
-            horizontal=True,
-            index=None,
-            key=f"widget_profile_{key}"
+
+        st.markdown(
+            f'<div class="question-text">{spec["question"]}</div>',
+            unsafe_allow_html=True
         )
+
         if spec.get("anchor"):
             st.markdown(
                 f'<div class="anchor-text">{spec["anchor"]}</div>',
                 unsafe_allow_html=True
             )
+
+        st.radio(
+            label="",
+            options=[1, 2, 3, 4, 5],
+            horizontal=True,
+            index=None,
+            key=f"widget_profile_{key}",
+            label_visibility="collapsed",
+        )
+
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("#### Vægtspørgsmål")
