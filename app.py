@@ -279,28 +279,52 @@ def scroll_to_top():
     components.html(
         """
         <script>
-        const scrollNow = () => {
-            window.parent.scrollTo(0, 0);
+        function forceScrollTop() {
+            try {
+                window.parent.scrollTo(0, 0);
+                window.parent.document.documentElement.scrollTop = 0;
+                window.parent.document.body.scrollTop = 0;
 
-            const app = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-            if (app) {
-                app.scrollTo(0, 0);
-            }
+                const all = window.parent.document.querySelectorAll("*");
+                all.forEach((el) => {
+                    const style = window.parent.getComputedStyle(el);
+                    const canScroll =
+                        (style.overflowY === "auto" || style.overflowY === "scroll") &&
+                        el.scrollHeight > el.clientHeight;
 
-            const main = window.parent.document.querySelector('section.main');
-            if (main) {
-                main.scrollTo(0, 0);
-            }
-        };
+                    if (canScroll) {
+                        el.scrollTop = 0;
+                    }
+                });
 
-        scrollNow();
-        setTimeout(scrollNow, 50);
-        setTimeout(scrollNow, 150);
-        setTimeout(scrollNow, 300);
+                const selectors = [
+                    '[data-testid="stAppViewContainer"]',
+                    '[data-testid="stApp"]',
+                    'section.main',
+                    'main',
+                    '.main',
+                    '.block-container'
+                ];
+
+                selectors.forEach((selector) => {
+                    const el = window.parent.document.querySelector(selector);
+                    if (el) {
+                        el.scrollTop = 0;
+                    }
+                });
+            } catch (e) {}
+        }
+
+        forceScrollTop();
+        setTimeout(forceScrollTop, 50);
+        setTimeout(forceScrollTop, 150);
+        setTimeout(forceScrollTop, 300);
+        setTimeout(forceScrollTop, 600);
         </script>
         """,
         height=0,
     )
+
 
 def go_to_intro():
     st.session_state.page = "intro"
@@ -750,6 +774,7 @@ elif st.session_state.page == "test":
             label_visibility="collapsed",
         )
 
+    st.markdown('<div class="section-title">Vægtspørgsmål</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="section-caption">Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.</div>',
         unsafe_allow_html=True
