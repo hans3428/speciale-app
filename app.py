@@ -569,9 +569,11 @@ st.markdown(
         color: white !important;
     }
 
-    div[role="radiogroup"] svg {
-        display: none !important;
-    }
+    /* Fjern ALLE radio-circles (både sort og rød) */
+div[role="radiogroup"] svg,
+div[role="radiogroup"] input {
+    display: none !important;
+}
 
     .stButton > button,
     .stDownloadButton > button {
