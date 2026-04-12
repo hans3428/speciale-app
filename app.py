@@ -399,7 +399,7 @@ st.markdown(
         background: var(--white);
     }
 
-     .block-container {
+    .block-container {
         max-width: 1460px;
         padding-top: 5.5rem;
         padding-bottom: 3rem;
@@ -409,7 +409,7 @@ st.markdown(
         margin-bottom: 0.5rem;
     }
 
-  .top-title {
+    .top-title {
         color: var(--blue-dark);
         font-size: 4.2rem;
         font-weight: 800;
@@ -455,10 +455,28 @@ st.markdown(
         background: var(--blue-soft-2);
         border: 1px solid var(--border-blue);
         border-radius: 24px;
-        padding: 1.7rem 1.8rem;
+        padding: 1.9rem 2rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
         color: var(--text-main);
+    }
+
+    .intro-title {
+        color: var(--blue-dark);
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 0.55rem;
+    }
+
+    .intro-text {
+        color: var(--text-main);
+        font-size: 1.02rem;
+        line-height: 1.75;
+        margin-bottom: 1.25rem;
+    }
+
+    .intro-text:last-child {
+        margin-bottom: 0;
     }
 
     .step-box {
@@ -627,7 +645,6 @@ st.markdown(
         border-radius: 16px;
     }
 
-    /* Hide Streamlit default progress */
     .stProgress {
         display: none;
     }
@@ -641,32 +658,25 @@ init_state()
 if st.session_state.page == "intro":
     st.markdown('<div class="top-title">Kandidattesten - Cand.merc.</div>', unsafe_allow_html=True)
 
+    st.markdown('<div class="intro-box">', unsafe_allow_html=True)
+    st.markdown('<div class="intro-title">Hvad handler testen om?</div>', unsafe_allow_html=True)
     st.markdown(
-        """
-        <div class="intro-box">
-            <h3 style="color:#0f2d52; font-weight:800;">Hvad handler testen om?</h3>
-            <p style="color:#0f2d52;">
-                Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
-                Testen sammenholder dine præferencer med data om blandt andet studieform,
-                arbejdsmarked, faglige interesser og arbejdsstil.
-            </p>
-
-            <h3 style="color:#0f2d52; font-weight:800;">Hvorfor er den relevant?</h3>
-            <p style="color:#0f2d52;">
-                Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
-                Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
-                og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
-            </p>
-
-            <h3 style="color:#0f2d52; font-weight:800;">Hvordan fungerer den?</h3>
-            <p style="color:#0f2d52;">
-                Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
-                og viser de linjer, der matcher din profil bedst.
-            </p>
-        </div>
-        """,
+        '<div class="intro-text">Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig. Testen sammenholder dine præferencer med data om blandt andet studieform, arbejdsmarked, faglige interesser og arbejdsstil.</div>',
         unsafe_allow_html=True
     )
+
+    st.markdown('<div class="intro-title">Hvorfor er den relevant?</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="intro-text">Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret. Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown('<div class="intro-title">Hvordan fungerer den?</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="intro-text">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>',
+        unsafe_allow_html=True
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
 
     with st.expander("Se model og metode", expanded=False):
         st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
