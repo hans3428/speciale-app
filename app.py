@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(page_title="Cand.merc.-linjematch", layout="wide")
@@ -274,16 +275,25 @@ def init_state():
         st.session_state.raw_answers = {}
 
 
+def scroll_to_top():
+    components.html(
+        """
+        <script>
+            window.parent.scrollTo(0, 0);
+        </script>
+        """,
+        height=0,
+    )
+
+
 def go_to_intro():
     st.session_state.page = "intro"
     st.session_state.step = 0
-    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def go_to_test():
     st.session_state.page = "test"
     st.session_state.step = 0
-    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def next_step():
@@ -291,7 +301,6 @@ def next_step():
         st.session_state.step += 1
     else:
         st.session_state.page = "result"
-    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def prev_step():
@@ -299,7 +308,6 @@ def prev_step():
         st.session_state.step -= 1
     else:
         st.session_state.page = "intro"
-    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def go_to_last_step():
@@ -536,54 +544,52 @@ st.markdown(
     }
 
     div[role="radiogroup"] {
-    gap: 0.9rem;
-    margin-top: 0.2rem;
-    margin-bottom: 1.2rem;
-    flex-wrap: wrap;
-}
+        gap: 0.9rem;
+        margin-top: 0.2rem;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+    }
 
-div[role="radiogroup"] > label {
-    border: 1.5px solid var(--border-blue);
-    border-radius: 999px;
-    padding: 0.65rem 1.15rem;
-    background: var(--blue-soft-2);
-    min-width: 160px;
-    justify-content: center;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
+    div[role="radiogroup"] > label {
+        border: 1.5px solid var(--border-blue);
+        border-radius: 999px;
+        padding: 0.65rem 1.15rem;
+        background: var(--blue-soft-2);
+        min-width: 160px;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
 
-div[role="radiogroup"] > label:hover {
-    border-color: var(--blue-mid);
-    background: var(--blue-soft);
-}
+    div[role="radiogroup"] > label:hover {
+        border-color: var(--blue-mid);
+        background: var(--blue-soft);
+    }
 
-div[role="radiogroup"] > label span {
-    color: var(--blue-dark) !important;
-    font-weight: 700;
-    font-size: 0.96rem;
-    text-align: center;
-}
+    div[role="radiogroup"] > label span {
+        color: var(--blue-dark) !important;
+        font-weight: 700;
+        font-size: 0.96rem;
+        text-align: center;
+    }
 
-/* valgt */
-div[role="radiogroup"] > label:has(input:checked) {
-    background: var(--blue-dark) !important;
-    border-color: var(--blue-dark) !important;
-    box-shadow: 0 4px 14px rgba(15,45,82,0.25);
-}
+    div[role="radiogroup"] > label:has(input:checked) {
+        background: var(--blue-dark) !important;
+        border-color: var(--blue-dark) !important;
+        box-shadow: 0 4px 14px rgba(15,45,82,0.25);
+    }
 
-div[role="radiogroup"] > label:has(input:checked) * {
-    color: white !important;
-}
+    div[role="radiogroup"] > label:has(input:checked) * {
+        color: white !important;
+    }
 
-div[role="radiogroup"] > label:has(input:checked) span {
-    color: white !important;
-}
+    div[role="radiogroup"] > label:has(input:checked) span {
+        color: white !important;
+    }
 
-/* 🔥 KORREKT måde at fjerne radio-cirkel */
-div[role="radiogroup"] > label > div:first-child {
-    display: none !important;
-}
+    div[role="radiogroup"] > label > div:first-child {
+        display: none !important;
+    }
 
     .stButton > button,
     .stDownloadButton > button {
@@ -675,6 +681,7 @@ div[role="radiogroup"] > label > div:first-child {
 init_state()
 
 if st.session_state.page == "intro":
+    scroll_to_top()
     st.markdown('<div class="top-title">Kandidattesten - Cand.merc.</div>', unsafe_allow_html=True)
 
     st.markdown("""
@@ -697,6 +704,7 @@ if st.session_state.page == "intro":
     st.button("Start testen", type="primary", on_click=go_to_test)
 
 elif st.session_state.page == "test":
+    scroll_to_top()
     current_group = GROUP_ORDER[st.session_state.step]
     current_items = GROUPS[current_group]
 
@@ -769,6 +777,7 @@ elif st.session_state.page == "test":
     )
 
 elif st.session_state.page == "result":
+    scroll_to_top()
     user_profile = st.session_state.answers.copy()
     raw_weights = st.session_state.weights.copy()
     group_weights = normalize_weights(raw_weights)
