@@ -532,47 +532,48 @@ st.markdown(
     }
 
     div[role="radiogroup"] {
-        gap: 0.9rem;
-        margin-top: 0.2rem;
-        margin-bottom: 1.2rem;
-        flex-wrap: wrap;
-    }
+    gap: 0.9rem;
+    margin-top: 0.2rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
 
-    div[role="radiogroup"] > label {
-        border: 1.5px solid var(--border-blue);
-        border-radius: 999px;
-        padding: 0.65rem 1.15rem;
-        background: var(--blue-soft-2);
-        min-width: 160px;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
+div[role="radiogroup"] > label {
+    border: 1.5px solid var(--border-blue);
+    border-radius: 999px;
+    padding: 0.65rem 1.15rem;
+    background: var(--blue-soft-2);
+    min-width: 160px;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
 
-    div[role="radiogroup"] > label:hover {
-        border-color: var(--blue-mid);
-        background: var(--blue-soft);
-    }
+div[role="radiogroup"] > label:hover {
+    border-color: var(--blue-mid);
+    background: var(--blue-soft);
+}
 
-    div[role="radiogroup"] > label span {
-        color: var(--blue-dark) !important;
-        font-weight: 700;
-        font-size: 0.96rem;
-        text-align: center;
-    }
+div[role="radiogroup"] > label span {
+    color: var(--blue-dark) !important;
+    font-weight: 700;
+    font-size: 0.96rem;
+    text-align: center;
+}
 
-    div[role="radiogroup"] > label:has(input:checked) {
+/* valgt */
+div[role="radiogroup"] > label:has(input:checked) {
     background: var(--blue-dark) !important;
     border-color: var(--blue-dark) !important;
     box-shadow: 0 4px 14px rgba(15,45,82,0.25);
 }
 
-    div[role="radiogroup"] > label:has(input:checked) span {
-        color: white !important;
-    }
+div[role="radiogroup"] > label:has(input:checked) span {
+    color: white !important;
+}
 
-    /* Fjern ALLE radio-circles (både sort og rød) */
-div[role="radiogroup"] svg,
-div[role="radiogroup"] input {
+/* 🔥 KORREKT måde at fjerne radio-cirkel */
+div[role="radiogroup"] > label > div:first-child {
     display: none !important;
 }
 
