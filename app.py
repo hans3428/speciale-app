@@ -859,7 +859,9 @@ elif st.session_state.page == "result":
         st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
     with c2:
         st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
-    
+    with c3:
+        st.metric(label="Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']:.3f}")
+
     st.subheader(f"Bedste samlede match: {best_name}")
     
     group_matches = {g: top3.iloc[0][f"Match_{g}"] for g in GROUPS}
