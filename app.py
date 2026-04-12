@@ -399,9 +399,9 @@ st.markdown(
         background: var(--white);
     }
 
-    .block-container {
+     .block-container {
         max-width: 1460px;
-        padding-top: 0.5rem;
+        padding-top: 5.5rem;
         padding-bottom: 3rem;
     }
 
@@ -409,11 +409,12 @@ st.markdown(
         margin-bottom: 0.5rem;
     }
 
-    .top-title {
+  .top-title {
         color: var(--blue-dark);
         font-size: 4.2rem;
         font-weight: 800;
-        line-height: 1.02;
+        line-height: 1.05;
+        margin-top: 0.5rem;
         margin-bottom: 2rem;
         letter-spacing: -0.03em;
     }
