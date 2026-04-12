@@ -206,10 +206,44 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     labels = axis_labels + [axis_labels[0]]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatterpolar(r=user_vals, theta=labels, fill="toself", name="Din profil"))
-    fig.add_trace(go.Scatterpolar(r=line_vals, theta=labels, fill="toself", name=str(line_row["Linje"])))
+
+    fig.add_trace(go.Scatterpolar(
+        r=user_vals,
+        theta=labels,
+        fill="toself",
+        name="Din profil",
+        line=dict(color="#0f2d52", width=3),
+        fillcolor="rgba(15, 45, 82, 0.18)"
+    ))
+
+    fig.add_trace(go.Scatterpolar(
+        r=line_vals,
+        theta=labels,
+        fill="toself",
+        name=str(line_row["Linje"]),
+        line=dict(color="#1f5fa8", width=3),
+        fillcolor="rgba(31, 95, 168, 0.16)"
+    ))
+
     fig.update_layout(
-        polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        polar=dict(
+            bgcolor="white",
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1],
+                gridcolor="#d7e6f7",
+                linecolor="#b9d1ee",
+                tickfont=dict(color="#0f2d52")
+            ),
+            angularaxis=dict(
+                gridcolor="#d7e6f7",
+                linecolor="#b9d1ee",
+                tickfont=dict(color="#0f2d52")
+            )
+        ),
+        legend=dict(font=dict(color="#0f2d52")),
         showlegend=True,
         height=500,
         margin=dict(l=20, r=20, t=20, b=20),
@@ -327,7 +361,7 @@ def render_test_header(step: int, total_steps: int, subtitle: str) -> None:
     st.markdown(
         f"""
         <div class="top-wrap">
-            <div class="top-title">Kandidatesten - Cand.merc.</div>
+            <div class="top-title">Kandidattesten - Cand.merc.</div>
             <div class="top-step">Trin {step} af {total_steps}</div>
             <div class="top-subtitle">{subtitle}</div>
         </div>
@@ -350,8 +384,19 @@ def render_custom_progress(progress_value: float) -> None:
 st.markdown(
     """
     <style>
+    :root {
+        --blue-dark: #0f2d52;
+        --blue-mid: #1f5fa8;
+        --blue-soft: #dbeafe;
+        --blue-soft-2: #eef5ff;
+        --border-blue: #b9d1ee;
+        --text-main: #0f2d52;
+        --text-soft: #4a678c;
+        --white: #ffffff;
+    }
+
     .stApp {
-        background: linear-gradient(180deg, #8cc3ea 0%, #9dcdf0 52%, #b2daf5 100%);
+        background: var(--white);
     }
 
     .block-container {
@@ -365,8 +410,8 @@ st.markdown(
     }
 
     .top-title {
-        color: #f5f7fb;
-        font-size: 4.55rem;
+        color: var(--blue-dark);
+        font-size: 4.2rem;
         font-weight: 800;
         line-height: 1.02;
         margin-bottom: 2rem;
@@ -374,16 +419,15 @@ st.markdown(
     }
 
     .top-step {
-        color: #f5f7fb;
+        color: var(--blue-mid);
         font-size: 0.95rem;
         font-weight: 700;
-        margin-bottom: 1.75rem;
-        opacity: 0.96;
+        margin-bottom: 1.4rem;
     }
 
     .top-subtitle {
-        color: #f5f7fb;
-        font-size: 3.05rem;
+        color: var(--blue-dark);
+        font-size: 2.8rem;
         font-weight: 800;
         line-height: 1.12;
         margin-bottom: 2rem;
@@ -392,26 +436,28 @@ st.markdown(
 
     .progress-shell {
         width: 92%;
-        height: 18px;
-        border: 1.2px solid rgba(255,255,255,0.72);
-        border-radius: 4px;
-        background: rgba(255,255,255,0.02);
+        height: 16px;
+        border: 1px solid var(--border-blue);
+        border-radius: 999px;
+        background: var(--blue-soft-2);
         overflow: hidden;
-        margin-bottom: 3.1rem;
+        margin-bottom: 3rem;
     }
 
     .progress-fill {
         height: 100%;
-        background: rgba(255,255,255,0.92);
+        background: var(--blue-dark);
+        border-radius: 999px;
     }
 
     .intro-box {
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 28px;
-        padding: 1.5rem 1.6rem;
+        background: var(--blue-soft-2);
+        border: 1px solid var(--border-blue);
+        border-radius: 24px;
+        padding: 1.7rem 1.8rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
+        color: var(--text-main);
     }
 
     .step-box {
@@ -423,80 +469,84 @@ st.markdown(
     }
 
     .section-title {
-        color: #f5f7fb;
-        font-size: 1.5rem;
+        color: var(--blue-dark);
+        font-size: 1.45rem;
         font-weight: 800;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.3rem;
     }
 
     .section-caption {
-        color: #f5f7fb;
+        color: var(--text-soft);
         font-size: 0.98rem;
         font-style: italic;
-        margin-bottom: 1.55rem;
-        opacity: 0.96;
+        margin-bottom: 1.4rem;
     }
 
     .question-box {
         width: 92%;
-        background: rgba(255,255,255,0.09);
-        border: 1.2px solid rgba(255,255,255,0.56);
-        border-radius: 44px;
-        padding: 1.65rem 1.75rem 1.05rem 1.75rem;
-        margin-bottom: 1.7rem;
+        background: var(--white);
+        border: 1.5px solid var(--border-blue);
+        border-radius: 24px;
+        padding: 1.4rem 1.5rem 1rem 1.5rem;
+        margin-bottom: 1.3rem;
+        box-shadow: 0 4px 18px rgba(15, 45, 82, 0.06);
     }
 
     .question-number {
-        color: #f5f7fb;
-        font-size: 0.95rem;
+        color: var(--blue-mid);
+        font-size: 0.92rem;
         font-weight: 700;
-        margin-bottom: 0.55rem;
-        opacity: 0.96;
+        margin-bottom: 0.45rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .question-text {
-        color: #f8fbff;
-        font-size: 1.12rem;
+        color: var(--blue-dark);
+        font-size: 1.08rem;
         font-weight: 800;
-        line-height: 1.35;
-        margin-bottom: 0.38rem;
+        line-height: 1.4;
+        margin-bottom: 0.35rem;
     }
 
     .anchor-text {
-        color: #f5f7fb;
-        font-size: 0.96rem;
+        color: var(--text-soft);
+        font-size: 0.95rem;
         font-style: italic;
         line-height: 1.45;
         margin-bottom: 0.8rem;
-        opacity: 0.96;
     }
 
     .soft-note {
-        color: #f5f7fb;
+        color: var(--text-soft);
         font-size: 0.92rem;
-        font-style: italic;
-        margin-top: 0.6rem;
-        opacity: 0.96;
+        margin-top: 0.7rem;
     }
 
     div[role="radiogroup"] {
-        gap: 1rem;
+        gap: 0.9rem;
         margin-top: 0.2rem;
         margin-bottom: 0.05rem;
         flex-wrap: wrap;
     }
 
     div[role="radiogroup"] > label {
-        border: 1.2px solid rgba(255,255,255,0.40);
+        border: 1.5px solid var(--border-blue);
         border-radius: 999px;
         padding: 0.46rem 1.02rem;
-        background: rgba(255,255,255,0.05);
+        background: var(--blue-soft-2);
         min-width: 94px;
         justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    div[role="radiogroup"] > label:hover {
+        border-color: var(--blue-mid);
+        background: var(--blue-soft);
     }
 
     div[role="radiogroup"] > label span {
-        color: #2f3542 !important;
+        color: var(--blue-dark) !important;
         font-weight: 700;
         font-size: 0.98rem;
     }
@@ -504,57 +554,79 @@ st.markdown(
     .stButton > button,
     .stDownloadButton > button {
         border-radius: 999px;
-        border: none;
-        padding: 0.58rem 1.18rem;
+        padding: 0.65rem 1.25rem;
         font-weight: 700;
+        border: 1.5px solid var(--blue-dark);
     }
 
     .stButton > button[kind="primary"] {
-        background: #f5f7fb;
-        color: #5c95c5;
+        background: var(--blue-dark);
+        color: var(--white);
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        background: #133764;
+        border-color: #133764;
+        color: var(--white);
     }
 
     .stButton > button:not([kind="primary"]),
     .stDownloadButton > button {
-        background: rgba(255,255,255,0.18);
-        color: #f5f7fb;
-        border: 1px solid rgba(255,255,255,0.20);
+        background: var(--white);
+        color: var(--blue-dark);
+    }
+
+    .stButton > button:not([kind="primary"]):hover,
+    .stDownloadButton > button:hover {
+        background: var(--blue-soft-2);
+        color: var(--blue-dark);
+        border-color: var(--blue-mid);
     }
 
     div[data-testid="stMetric"] {
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.16);
-        border-radius: 20px;
-        padding: 0.8rem 0.95rem;
+        background: var(--blue-soft-2);
+        border: 1px solid var(--border-blue);
+        border-radius: 18px;
+        padding: 0.95rem 1rem;
     }
 
     div[data-testid="stMetric"] label,
     div[data-testid="stMetric"] div {
-        color: #f5f7fb !important;
+        color: var(--blue-dark) !important;
     }
 
     div[data-testid="stDataFrame"] {
-        background: rgba(255,255,255,0.98);
+        background: var(--white);
+        border: 1px solid var(--border-blue);
         border-radius: 18px;
         padding: 0.25rem;
     }
 
     div[data-testid="stExpander"] {
-        background: rgba(255,255,255,0.10);
+        background: var(--blue-soft-2);
         border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.18);
+        border: 1px solid var(--border-blue);
     }
 
     div[data-testid="stExpander"] summary p {
-        color: #f5f7fb !important;
+        color: var(--blue-dark) !important;
         font-weight: 700;
     }
 
-    .stMarkdown, .stText, .stSubheader, .stHeader, .stCaption {
-        color: #f5f7fb !important;
+    .stMarkdown, .stText, .stSubheader, .stHeader, .stCaption, p, li, label {
+        color: var(--text-main) !important;
     }
 
-    /* skjul streamlits egen progress helt */
+    h1, h2, h3 {
+        color: var(--blue-dark) !important;
+        font-weight: 800 !important;
+    }
+
+    .stAlert {
+        border-radius: 16px;
+    }
+
+    /* Hide Streamlit default progress */
     .stProgress {
         display: none;
     }
@@ -566,25 +638,27 @@ st.markdown(
 init_state()
 
 if st.session_state.page == "intro":
-    st.markdown('<div class="top-title">Kandidatesten - Cand.merc.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="top-title">Kandidattesten - Cand.merc.</div>', unsafe_allow_html=True)
 
     st.markdown(
         """
         <div class="intro-box">
-            <h3 style="color:#f5f7fb;">Hvad handler testen om?</h3>
-            <p style="color:#f5f7fb;">
+            <h3 style="color:#0f2d52; font-weight:800;">Hvad handler testen om?</h3>
+            <p style="color:#0f2d52;">
                 Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
                 Testen sammenholder dine præferencer med data om blandt andet studieform,
                 arbejdsmarked, faglige interesser og arbejdsstil.
             </p>
-            <h3 style="color:#f5f7fb;">Hvorfor er den relevant?</h3>
-            <p style="color:#f5f7fb;">
+
+            <h3 style="color:#0f2d52; font-weight:800;">Hvorfor er den relevant?</h3>
+            <p style="color:#0f2d52;">
                 Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
                 Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
                 og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
             </p>
-            <h3 style="color:#f5f7fb;">Hvordan fungerer den?</h3>
-            <p style="color:#f5f7fb;">
+
+            <h3 style="color:#0f2d52; font-weight:800;">Hvordan fungerer den?</h3>
+            <p style="color:#0f2d52;">
                 Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
                 og viser de linjer, der matcher din profil bedst.
             </p>
@@ -678,14 +752,17 @@ elif st.session_state.page == "test":
                 next_step()
                 st.rerun()
 
-    st.markdown('<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>',
+        unsafe_allow_html=True
+    )
 
 elif st.session_state.page == "result":
     user_profile = st.session_state.answers.copy()
     raw_weights = st.session_state.weights.copy()
     group_weights = normalize_weights(raw_weights)
 
-    st.markdown('<div class="top-title">Kandidatesten - Cand.merc.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="top-title">Kandidattesten - Cand.merc.</div>', unsafe_allow_html=True)
 
     if not all_profile_columns_present(user_profile):
         st.error("Der mangler et eller flere profilsvar. Gå tilbage og gennemfør alle spørgsmål igen.")
