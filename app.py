@@ -706,11 +706,6 @@ elif st.session_state.page == "test":
 
     render_custom_progress((st.session_state.step + 1) / len(GROUP_ORDER))
 
-    st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="section-caption">Skala: Slet ikke · I lav grad · I nogen grad · I høj grad · I meget høj grad</div>',
-        unsafe_allow_html=True
-    )
 
     for i, (key, spec) in enumerate(current_items.items(), start=1):
         st.markdown(f'<div class="question-number">Q{i:02d}</div>', unsafe_allow_html=True)
