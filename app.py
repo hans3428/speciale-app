@@ -698,7 +698,6 @@ elif st.session_state.page == "test":
     )
 
     for i, (key, spec) in enumerate(current_items.items(), start=1):
-        st.markdown('<div class="question-box">', unsafe_allow_html=True)
         st.markdown(f'<div class="question-number">Q{i:02d}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="question-text">{spec["question"]}</div>', unsafe_allow_html=True)
 
@@ -713,7 +712,6 @@ elif st.session_state.page == "test":
             key=f"widget_profile_{key}",
             label_visibility="collapsed",
         )
-        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-title">Vægtspørgsmål</div>', unsafe_allow_html=True)
     st.markdown(
@@ -721,9 +719,9 @@ elif st.session_state.page == "test":
         unsafe_allow_html=True
     )
 
-    st.markdown('<div class="question-box">', unsafe_allow_html=True)
     st.markdown('<div class="question-number">Vægt</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
+
     st.radio(
         "",
         options=[1, 2, 3, 4, 5],
@@ -732,7 +730,6 @@ elif st.session_state.page == "test":
         key=f"widget_weight_{current_group}",
         label_visibility="collapsed",
     )
-    st.markdown('</div>', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 1, 3])
 
