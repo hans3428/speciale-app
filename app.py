@@ -475,10 +475,6 @@ st.markdown(
         margin-bottom: 1.25rem;
     }
 
-    .intro-text:last-child {
-        margin-bottom: 0;
-    }
-
     .step-box {
         background: transparent;
         border: none;
@@ -658,25 +654,32 @@ init_state()
 if st.session_state.page == "intro":
     st.markdown('<div class="top-title">Kandidattesten - Cand.merc.</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="intro-box">', unsafe_allow_html=True)
-    st.markdown('<div class="intro-title">Hvad handler testen om?</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="intro-text">Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig. Testen sammenholder dine præferencer med data om blandt andet studieform, arbejdsmarked, faglige interesser og arbejdsstil.</div>',
-        unsafe_allow_html=True
-    )
+        """
+        <div class="intro-box">
+            <div class="intro-title">Hvad handler testen om?</div>
+            <div class="intro-text">
+                Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig.
+                Testen sammenholder dine præferencer med data om blandt andet studieform, arbejdsmarked,
+                faglige interesser og arbejdsstil.
+            </div>
 
-    st.markdown('<div class="intro-title">Hvorfor er den relevant?</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="intro-text">Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret. Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.</div>',
-        unsafe_allow_html=True
-    )
+            <div class="intro-title">Hvorfor er den relevant?</div>
+            <div class="intro-text">
+                Valg af kandidatlinje kan være svært, fordi flere uddannelser kan virke interessante på papiret.
+                Testen fungerer som et beslutningsstøtteværktøj, der kan gøre dine overvejelser mere konkrete
+                og hjælpe dig med at se, hvilke linjer der matcher dine prioriteringer bedst.
+            </div>
 
-    st.markdown('<div class="intro-title">Hvordan fungerer den?</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="intro-text">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>',
+            <div class="intro-title">Hvordan fungerer den?</div>
+            <div class="intro-text" style="margin-bottom:0;">
+                Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling
+                og viser de linjer, der matcher din profil bedst.
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
-    st.markdown('</div>', unsafe_allow_html=True)
 
     with st.expander("Se model og metode", expanded=False):
         st.latex(r"Score_j = \sum_k w_k \cdot (1 - |person_k - linje_{jk}|)")
