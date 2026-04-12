@@ -279,12 +279,28 @@ def scroll_to_top():
     components.html(
         """
         <script>
+        const scrollNow = () => {
             window.parent.scrollTo(0, 0);
+
+            const app = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+            if (app) {
+                app.scrollTo(0, 0);
+            }
+
+            const main = window.parent.document.querySelector('section.main');
+            if (main) {
+                main.scrollTo(0, 0);
+            }
+        };
+
+        scrollNow();
+        setTimeout(scrollNow, 50);
+        setTimeout(scrollNow, 150);
+        setTimeout(scrollNow, 300);
         </script>
         """,
         height=0,
     )
-
 
 def go_to_intro():
     st.session_state.page = "intro"
