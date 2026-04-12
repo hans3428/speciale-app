@@ -852,31 +852,31 @@ elif st.session_state.page == "result":
     best_name = top3.iloc[0]["Linje"]
     best_row = LINE_DF.loc[LINE_DF["Linje"] == best_name].iloc[0]
     
-st.subheader("Resultat")
-c1, c2, c3 = st.columns(3)
-
-with c1:
-    st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
-with c2:
-    st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
-
-st.subheader(f"Bedste samlede match: {best_name}")
-
-group_matches = {g: top3.iloc[0][f"Match_{g}"] for g in GROUPS}
-sorted_groups = sorted(group_matches.items(), key=lambda x: x[1], reverse=True)
-strengths = ", ".join(g for g, _ in sorted_groups[:2])
-weaker = ", ".join(g for g, _ in sorted_groups[-2:])
-
-st.write(
-    f"Dit bedste match er **{best_name}**. "
-    f"Dine stærkeste matches ligger især inden for **{strengths}**, "
-    f"mens de relativt svagere matches ligger inden for **{weaker}**."
-)
-
-st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
-
-st.subheader("Alle linjer")
-st.dataframe(scores, use_container_width=True, hide_index=True)
+    st.subheader("Resultat")
+    c1, c2, c3 = st.columns(3)
+    
+    with c1:
+        st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
+    with c2:
+        st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
+    
+    st.subheader(f"Bedste samlede match: {best_name}")
+    
+    group_matches = {g: top3.iloc[0][f"Match_{g}"] for g in GROUPS}
+    sorted_groups = sorted(group_matches.items(), key=lambda x: x[1], reverse=True)
+    strengths = ", ".join(g for g, _ in sorted_groups[:2])
+    weaker = ", ".join(g for g, _ in sorted_groups[-2:])
+    
+    st.write(
+        f"Dit bedste match er **{best_name}**. "
+        f"Dine stærkeste matches ligger især inden for **{strengths}**, "
+        f"mens de relativt svagere matches ligger inden for **{weaker}**."
+    )
+    
+    st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
+    
+    st.subheader("Alle linjer")
+    st.dataframe(scores, use_container_width=True, hide_index=True)
 
 
     c1, c2, c3 = st.columns([1, 1, 3])
