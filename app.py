@@ -34,17 +34,17 @@ GROUPS = {
     "Arbejdsmarked": {
         "Løn": {
             "question": "Hvor vigtigt er det for dig at tjene mere end gennemsnittet for cand.merc.-kandidater?",
-            "anchor": "Den gennemsnitlige startløn ligger omkring XX kr., men svar ud fra din egen opfattelse.",
+            "anchor": "Den gennemsnitlige startløn ligger omkring 46.000kr. (inkl. pension), men svar ud fra din egen opfattelse.",
             "column": "Løn",
         },
         "Jobsikkerhed": {
             "question": "Hvor vigtigt er det for dig at have jobsikkerhed i dit fremtidige job?",
-            "anchor": "Jobsikkerhed kan forstås som lav risiko for ledighed efter endt uddannelse.",
+            "anchor": "Den gennemsnitlige periode en færdigudannet Cand.Merc. er jobsøgende er 2,5 måned.",
             "column": "Jobsikkerhed",
         },
         "karakter_avg": {
             "question": "Hvor vigtigt er det for dig at opnå gode faglige resultater på studiet?",
-            "anchor": "Fx karakterer over gennemsnittet eller generelt fagligt niveau.",
+            "anchor": "Fx karakterer over gennemsnittet på 8,1.",
             "column": "karakter_avg",
         },
     },
@@ -95,7 +95,7 @@ GROUPS = {
         },
         "LeadershipOrientation": {
             "question": "Jeg motiveres af at have ansvar for at lede og koordinere andre",
-            "anchor": "Fx at fordele opgaver eller tage ansvar i grupper.",
+            "anchor": "Fx at fordele opgaver eller tage det overordenede ansvar i grupper.",
             "column": "LeadershipOrientation",
         },
     },
