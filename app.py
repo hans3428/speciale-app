@@ -561,9 +561,10 @@ st.markdown(
     }
 
     div[role="radiogroup"] > label:has(input:checked) {
-        background: var(--blue-dark) !important;
-        border-color: var(--blue-dark) !important;
-    }
+    background: var(--blue-dark) !important;
+    border-color: var(--blue-dark) !important;
+    box-shadow: 0 4px 14px rgba(15,45,82,0.25);
+}
 
     div[role="radiogroup"] > label:has(input:checked) span {
         color: white !important;
