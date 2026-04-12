@@ -39,7 +39,7 @@ GROUPS = {
         },
         "Jobsikkerhed": {
             "question": "Hvor vigtigt er det for dig at have jobsikkerhed i dit fremtidige job?",
-            "anchor": "Den gennemsnitlige periode en færdigudannet Cand.Merc. er jobsøgende er 2,5 måned.",
+            "anchor": "Den gennemsnitlige periode en færdigudannet Cand.merc. er jobsøgende er 2,5 måned.",
             "column": "Jobsikkerhed",
         },
         "karakter_avg": {
