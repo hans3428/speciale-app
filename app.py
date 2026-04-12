@@ -575,8 +575,8 @@ st.markdown(
     }
 
     .stButton > button[kind="primary"] {
-        background: var(--blue-dark);
-        color: var(--white);
+        background: var(--blue-dark) !important;
+        color: white !important;
     }
 
     .stButton > button[kind="primary"]:hover {
