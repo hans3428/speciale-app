@@ -706,7 +706,6 @@ elif st.session_state.page == "test":
 
     render_custom_progress((st.session_state.step + 1) / len(GROUP_ORDER))
 
-
     for i, (key, spec) in enumerate(current_items.items(), start=1):
         st.markdown(f'<div class="question-number">Q{i:02d}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="question-text">{spec["question"]}</div>', unsafe_allow_html=True)
@@ -740,7 +739,8 @@ elif st.session_state.page == "test":
         key=f"widget_weight_{current_group}",
         label_visibility="collapsed",
     )
-     st.markdown("<div style='height: 1.6rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 1.6rem;'></div>", unsafe_allow_html=True)
 
     left_space, col1, col2, right_space = st.columns([2, 1, 1, 2])
 
@@ -758,7 +758,7 @@ elif st.session_state.page == "test":
                 save_current_group_answers(current_group)
                 next_step()
                 st.rerun()
-                    
+
     st.markdown(
         '<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>',
         unsafe_allow_html=True
