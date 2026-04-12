@@ -277,11 +277,13 @@ def init_state():
 def go_to_intro():
     st.session_state.page = "intro"
     st.session_state.step = 0
+    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def go_to_test():
     st.session_state.page = "test"
     st.session_state.step = 0
+    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def next_step():
@@ -289,6 +291,7 @@ def next_step():
         st.session_state.step += 1
     else:
         st.session_state.page = "result"
+    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def prev_step():
@@ -296,6 +299,7 @@ def prev_step():
         st.session_state.step -= 1
     else:
         st.session_state.page = "intro"
+    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
 
 
 def go_to_last_step():
