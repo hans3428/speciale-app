@@ -568,6 +568,10 @@ div[role="radiogroup"] > label:has(input:checked) {
     box-shadow: 0 4px 14px rgba(15,45,82,0.25);
 }
 
+div[role="radiogroup"] > label:has(input:checked) * {
+    color: white !important;
+}
+
 div[role="radiogroup"] > label:has(input:checked) span {
     color: white !important;
 }
