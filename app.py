@@ -741,22 +741,24 @@ elif st.session_state.page == "test":
         label_visibility="collapsed",
     )
 
-    col1, col2, col3 = st.columns([1, 1, 3])
+    st.markdown("<div style='height: 1.6rem;'></div>", unsafe_allow_html=True)
 
-    with col1:
-        if st.button("⬅ Tilbage"):
+left_space, col1, col2, right_space = st.columns([2, 1, 1, 2])
+
+with col1:
+    if st.button("⬅ Tilbage", use_container_width=True):
+        save_current_group_answers(current_group)
+        prev_step()
+        st.rerun()
+
+with col2:
+    if st.button("Videre ➜", type="primary", use_container_width=True):
+        if not is_group_answered(current_group):
+            st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
+        else:
             save_current_group_answers(current_group)
-            prev_step()
+            next_step()
             st.rerun()
-
-    with col2:
-        if st.button("Videre ➜", type="primary"):
-            if not is_group_answered(current_group):
-                st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
-            else:
-                save_current_group_answers(current_group)
-                next_step()
-                st.rerun()
 
     st.markdown(
         '<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>',
