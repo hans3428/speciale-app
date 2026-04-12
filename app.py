@@ -776,13 +776,15 @@ elif st.session_state.page == "test":
 
 
     st.markdown('<div class="question-number">Vægt</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-title"></div>', unsafe_allow_html=True)
+
+    
+    st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
+
     st.markdown(
         '<div class="section-caption">Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.</div>',
         unsafe_allow_html=True
     )
-    st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
-
+    
     st.radio(
         "",
         options=list(SCALE_LABELS.keys()),
