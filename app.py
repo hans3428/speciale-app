@@ -734,7 +734,6 @@ elif st.session_state.page == "test":
             label_visibility="collapsed",
         )
 
-    st.markdown('<div class="section-title">Vægtspørgsmål</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="section-caption">Angiv hvor vigtigt dette område samlet set er for dig i valget af kandidatlinje.</div>',
         unsafe_allow_html=True
