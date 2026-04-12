@@ -135,8 +135,18 @@ WEIGHT_QUESTIONS = {
 
 GROUP_ORDER = list(GROUPS.keys())
 
+SCALE_LABELS = {
+    "Slet ikke": 1,
+    "I lav grad": 2,
+    "I nogen grad": 3,
+    "I høj grad": 4,
+    "I meget høj grad": 5,
+}
 
-def response_to_zero_one(value: int) -> float:
+
+def response_to_zero_one(value) -> float:
+    if isinstance(value, str):
+        value = SCALE_LABELS[value]
     return (value - 1) / 4
 
 
@@ -323,7 +333,7 @@ def save_current_group_answers(group_name: str):
     weight_widget_key = f"widget_weight_{group_name}"
     weight_answer = st.session_state.get(weight_widget_key)
     if weight_answer is not None:
-        st.session_state.weights[group_name] = weight_answer
+        st.session_state.weights[group_name] = SCALE_LABELS[weight_answer]
 
 
 def load_current_group_defaults(group_name: str):
@@ -335,7 +345,8 @@ def load_current_group_defaults(group_name: str):
 
     weight_widget_key = f"widget_weight_{group_name}"
     if weight_widget_key not in st.session_state and group_name in st.session_state.weights:
-        st.session_state[weight_widget_key] = st.session_state.weights[group_name]
+        reverse_map = {v: k for k, v in SCALE_LABELS.items()}
+        st.session_state[weight_widget_key] = reverse_map[st.session_state.weights[group_name]]
 
 
 def is_group_answered(group_name: str) -> bool:
@@ -475,14 +486,6 @@ st.markdown(
         margin-bottom: 1.25rem;
     }
 
-    .step-box {
-        background: transparent;
-        border: none;
-        padding: 0;
-        margin-top: 0;
-        margin-bottom: 1rem;
-    }
-
     .section-title {
         color: var(--blue-dark);
         font-size: 1.45rem;
@@ -495,16 +498,6 @@ st.markdown(
         font-size: 0.98rem;
         font-style: italic;
         margin-bottom: 1.4rem;
-    }
-
-    .question-box {
-        width: 92%;
-        background: var(--white);
-        border: 1.5px solid var(--border-blue);
-        border-radius: 24px;
-        padding: 1.4rem 1.5rem 1rem 1.5rem;
-        margin-bottom: 1.3rem;
-        box-shadow: 0 4px 18px rgba(15, 45, 82, 0.06);
     }
 
     .question-number {
@@ -541,16 +534,16 @@ st.markdown(
     div[role="radiogroup"] {
         gap: 0.9rem;
         margin-top: 0.2rem;
-        margin-bottom: 0.05rem;
+        margin-bottom: 1.2rem;
         flex-wrap: wrap;
     }
 
     div[role="radiogroup"] > label {
         border: 1.5px solid var(--border-blue);
         border-radius: 999px;
-        padding: 0.46rem 1.02rem;
+        padding: 0.65rem 1.15rem;
         background: var(--blue-soft-2);
-        min-width: 94px;
+        min-width: 160px;
         justify-content: center;
         transition: all 0.2s ease;
     }
@@ -563,7 +556,21 @@ st.markdown(
     div[role="radiogroup"] > label span {
         color: var(--blue-dark) !important;
         font-weight: 700;
-        font-size: 0.98rem;
+        font-size: 0.96rem;
+        text-align: center;
+    }
+
+    div[role="radiogroup"] > label:has(input:checked) {
+        background: var(--blue-dark) !important;
+        border-color: var(--blue-dark) !important;
+    }
+
+    div[role="radiogroup"] > label:has(input:checked) span {
+        color: white !important;
+    }
+
+    div[role="radiogroup"] svg {
+        display: none !important;
     }
 
     .stButton > button,
@@ -575,13 +582,13 @@ st.markdown(
     }
 
     .stButton > button[kind="primary"] {
-    background: var(--blue-dark) !important;
-    color: white !important;
-}
+        background: var(--blue-dark) !important;
+        color: white !important;
+    }
 
-.stButton > button[kind="primary"] * {
-    color: white !important;
-}
+    .stButton > button[kind="primary"] * {
+        color: white !important;
+    }
 
     .stButton > button[kind="primary"]:hover {
         background: #133764;
@@ -693,7 +700,7 @@ elif st.session_state.page == "test":
 
     st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="section-caption">Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad</div>',
+        '<div class="section-caption">Skala: Slet ikke · I lav grad · I nogen grad · I høj grad · I meget høj grad</div>',
         unsafe_allow_html=True
     )
 
@@ -706,7 +713,7 @@ elif st.session_state.page == "test":
 
         st.radio(
             "",
-            options=[1, 2, 3, 4, 5],
+            options=list(SCALE_LABELS.keys()),
             horizontal=True,
             index=None,
             key=f"widget_profile_{key}",
@@ -724,47 +731,12 @@ elif st.session_state.page == "test":
 
     st.radio(
         "",
-        options=[1, 2, 3, 4, 5],
+        options=list(SCALE_LABELS.keys()),
         horizontal=True,
         index=None,
         key=f"widget_weight_{current_group}",
         label_visibility="collapsed",
     )
-
-    col1, col2, col3 = st.columns([1, 1, 3])
-
-    with col1:
-        if st.button("⬅ Tilbage"):
-            save_current_group_answers(current_group)
-            prev_step()
-            st.rerun()
-
-    with col2:
-        if st.button("Videre ➜", type="primary"):
-            if not is_group_answered(current_group):
-                st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
-            else:
-                save_current_group_answers(current_group)
-                next_step()
-                st.rerun()
-
-    st.markdown(
-        '<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>',
-        unsafe_allow_html=True
-    )
-    st.markdown('<div class="question-box">', unsafe_allow_html=True)
-    st.markdown('<div class="question-number">Vægt</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
-    st.radio(
-        "",
-        options=[1, 2, 3, 4, 5],
-        horizontal=True,
-        index=None,
-        key=f"widget_weight_{current_group}",
-        label_visibility="collapsed",
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 1, 3])
 
