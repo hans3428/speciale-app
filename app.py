@@ -691,7 +691,6 @@ elif st.session_state.page == "test":
 
     render_custom_progress((st.session_state.step + 1) / len(GROUP_ORDER))
 
-    st.markdown('<div class="step-box">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Profilspørgsmål</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="section-caption">Skala: 1 = Slet ikke · 2 = I lav grad · 3 = I nogen grad · 4 = I høj grad · 5 = I meget høj grad</div>',
@@ -722,6 +721,40 @@ elif st.session_state.page == "test":
         unsafe_allow_html=True
     )
 
+    st.markdown('<div class="question-box">', unsafe_allow_html=True)
+    st.markdown('<div class="question-number">Vægt</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
+    st.radio(
+        "",
+        options=[1, 2, 3, 4, 5],
+        horizontal=True,
+        index=None,
+        key=f"widget_weight_{current_group}",
+        label_visibility="collapsed",
+    )
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1, 1, 3])
+
+    with col1:
+        if st.button("⬅ Tilbage"):
+            save_current_group_answers(current_group)
+            prev_step()
+            st.rerun()
+
+    with col2:
+        if st.button("Videre ➜", type="primary"):
+            if not is_group_answered(current_group):
+                st.warning("Du skal besvare alle spørgsmål i denne blok, før du kan gå videre.")
+            else:
+                save_current_group_answers(current_group)
+                next_step()
+                st.rerun()
+
+    st.markdown(
+        '<div class="soft-note">Dine svar gemmes løbende, så du kan gå frem og tilbage mellem blokkene.</div>',
+        unsafe_allow_html=True
+    )
     st.markdown('<div class="question-box">', unsafe_allow_html=True)
     st.markdown('<div class="question-number">Vægt</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="question-text">{WEIGHT_QUESTIONS[current_group]}</div>', unsafe_allow_html=True)
