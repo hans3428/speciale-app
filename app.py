@@ -879,6 +879,9 @@ elif st.session_state.page == "result":
         f"mens de relativt svagere matches ligger inden for **{weaker}**."
     )
     
+explanation = detailed_match_explanation(user_profile, best_row, group_weights)
+st.markdown(explanation)
+    
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
     
     st.subheader("Scroll op for at se dit resultatat")
