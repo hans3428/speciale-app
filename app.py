@@ -673,27 +673,6 @@ st.markdown(
         display: none !important;
     }
 
-    /* FIX: gør selectbox tekst synlig (robust version) */
-
-    div[data-baseweb="select"] * {
-        color: white !important;
-    }
-    
-    div[data-baseweb="select"] {
-        background-color: #0f2d52 !important;
-    }
-    
-    ul[role="listbox"] {
-        background-color: #0f2d52 !important;
-    }
-    
-    ul[role="listbox"] li {
-        color: white !important;
-    }
-    
-    ul[role="listbox"] li:hover {
-        background-color: #1f5fa8 !important;
-    }
 
     .stButton > button,
     .stDownloadButton > button {
