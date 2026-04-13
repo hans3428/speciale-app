@@ -865,6 +865,8 @@ elif st.session_state.page == "result":
         st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']*100:.1f}%")
     with c3:
         st.metric(label="Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']*100:.1f}%")
+        
+    st.markdown("<br>", unsafe_allow_html=True)
 
     st.subheader(f"Bedste samlede match: {best_name}")
     
@@ -879,10 +881,12 @@ elif st.session_state.page == "result":
         f"mens de relativt svagere matches ligger inden for **{weaker}**."
     )
     
-    
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
-    
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     st.subheader("Scroll op for at se dit resultatat")
     
 
