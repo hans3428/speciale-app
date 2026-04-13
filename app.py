@@ -881,14 +881,15 @@ elif st.session_state.page == "result":
         f"mens de relativt svagere matches ligger inden for **{weaker}**."
     )
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.subheader("Scroll op for at se dit resultatat")
-    
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
 
     c1, c2, c3 = st.columns([1, 1, 3])
