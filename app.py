@@ -941,7 +941,7 @@ elif st.session_state.page == "result":
     
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
     
-    st.subheader("Scroll op for at se dit resultat")
+    st.subheader("*** Scroll op for at se dit resultat ***")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
