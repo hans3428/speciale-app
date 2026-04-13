@@ -673,28 +673,6 @@ st.markdown(
         display: none !important;
     }
 
-    /* gør teksten i selectbox og dropdown hvid */
-    div[data-baseweb="select"] > div,
-    div[data-baseweb="select"] span,
-    div[data-baseweb="select"] svg {
-        color: white !important;
-        fill: white !important;
-    }
-    
-    div[role="listbox"] {
-        background: #020817 !important;
-    }
-    
-    div[role="option"],
-    div[role="option"] * {
-        color: white !important;
-    }
-    
-    div[role="option"]:hover,
-    div[role="option"][aria-selected="true"] {
-        background: #1e293b !important;
-        color: white !important;
-    }
 
     .stButton > button,
     .stDownloadButton > button {
