@@ -260,6 +260,21 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
         margin=dict(l=20, r=20, t=20, b=20),
     )
     return fig
+
+def zero_one_to_label(value: float) -> str:
+    if pd.isna(value):
+        return "ukendt"
+
+    scale_map = {
+        0.00: "Slet ikke",
+        0.25: "I lav grad",
+        0.50: "I nogen grad",
+        0.75: "I høj grad",
+        1.00: "I meget høj grad",
+    }
+
+    nearest = min(scale_map.keys(), key=lambda x: abs(x - float(value)))
+    return scale_map[nearest]
     
 def why_not_higher_explanation(user_profile: dict, line_row: pd.Series, group_weights: dict) -> str:
     mismatches = []
@@ -267,7 +282,7 @@ def why_not_higher_explanation(user_profile: dict, line_row: pd.Series, group_we
     for group in GROUPS:
         weight = group_weights.get(group, 0)
 
-        for _, spec in GROUPS[group].items():
+        for key, spec in GROUPS[group].items():
             col = spec["column"]
 
             if col in user_profile and col in line_row.index and pd.notna(line_row[col]):
@@ -278,8 +293,11 @@ def why_not_higher_explanation(user_profile: dict, line_row: pd.Series, group_we
                 mismatches.append({
                     "group": group,
                     "column": col,
+                    "question": spec["question"],
                     "user_val": user_val,
                     "line_val": line_val,
+                    "user_label": zero_one_to_label(user_val),
+                    "line_label": zero_one_to_label(line_val),
                     "diff": diff,
                     "weighted_diff": diff * weight
                 })
@@ -287,20 +305,21 @@ def why_not_higher_explanation(user_profile: dict, line_row: pd.Series, group_we
     if not mismatches:
         return "Der kunne ikke identificeres tydelige forskelle."
 
-    # sorter efter største mismatch (vigtigst først)
     mismatches_sorted = sorted(mismatches, key=lambda x: x["weighted_diff"], reverse=True)
-
     top_issues = mismatches_sorted[:4]
 
     text = f"Du opnår ikke et højere match med **{line_row['Linje']}** primært på grund af følgende forskelle:\n\n"
 
     for m in top_issues:
         text += (
-            f"- **{m['column']}** ({m['group']}): "
-            f"Din profil ({m['user_val']:.2f}) vs. linjen ({m['line_val']:.2f})\n"
+            f"- **{m['question']}** ({m['group']}): "
+            f"Du svarede **{m['user_label']}**, mens linjen ligger nærmere **{m['line_label']}**.\n"
         )
 
-    text += "\nDisse forskelle trækker din samlede score ned, særligt fordi de ligger inden for områder, du selv vægter relativt højt."
+    text += (
+        "\nDisse forskelle trækker din samlede score ned, særligt fordi de ligger "
+        "inden for områder, du selv vægter relativt højt."
+    )
 
     return text
 
@@ -944,7 +963,7 @@ elif st.session_state.page == "result":
     why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
     st.markdown(why_text)
 
-    st.subheader("Scroll op for at se dit resultatat")
+    st.subheader("Scroll op for at se dit resultat")
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
