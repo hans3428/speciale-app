@@ -402,6 +402,7 @@ def next_step():
         st.session_state.step += 1
     else:
         st.session_state.page = "result"
+        scroll_to_top()
 
 
 def prev_step():
