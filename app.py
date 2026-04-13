@@ -860,11 +860,11 @@ elif st.session_state.page == "result":
     c1, c2, c3 = st.columns(3)
     
     with c1:
-        st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']:.3f}")
+        st.metric(label="Top 1", value=str(top3.iloc[0]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']*100:.1f}%")
     with c2:
-        st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[1]['Score']:.3f}")
+        st.metric(label="Top 2", value=str(top3.iloc[1]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']*100:.1f}%")
     with c3:
-        st.metric(label="Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[2]['Score']:.3f}")
+        st.metric(label="Top 3", value=str(top3.iloc[2]["Linje"]), delta=f"Score: {top3.iloc[0]['Score']*100:.1f}%")
 
     st.subheader(f"Bedste samlede match: {best_name}")
     
@@ -881,8 +881,8 @@ elif st.session_state.page == "result":
     
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
     
-    st.subheader("Alle linjer")
-    st.dataframe(scores, use_container_width=True, hide_index=True)
+    st.subheader("Scroll op for at se dit resultatat")
+    
 
 
     c1, c2, c3 = st.columns([1, 1, 3])
