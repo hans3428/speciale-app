@@ -260,7 +260,41 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
         margin=dict(l=20, r=20, t=20, b=20),
     )
     return fig
+    
+def detailed_match_explanation(user_profile: dict, line_row: pd.Series, group_weights: dict) -> str:
+    lines = []
 
+    group_summaries = []
+    for group in GROUPS:
+        cols = get_unique_group_columns(group)
+
+        diffs = []
+        for col in cols:
+            if col in user_profile and col in line_row.index and pd.notna(line_row[col]):
+                user_val = float(user_profile[col])
+                line_val = float(line_row[col])
+                diff = abs(user_val - line_val)
+                diffs.append((col, user_val, line_val, diff))
+
+        if diffs:
+            avg_match = 1 - sum(d[3] for d in diffs) / len(diffs)
+            weight = group_weights.get(group, 0)
+            group_summaries.append((group, avg_match, weight, diffs))
+
+    best_groups = sorted(group_summaries, key=lambda x: x[1], reverse=True)[:2]
+    weak_groups = sorted(group_summaries, key=lambda x: x[1])[:2]
+
+    lines.append(f"Dit samlede bedste match er **{line_row['Linje']}**.")
+
+    if best_groups:
+        best_text = [f"{g} ({m*100:.1f}%)" for g, m, _, _ in best_groups]
+        lines.append("Stærkeste match: " + ", ".join(best_text))
+
+    if weak_groups:
+        weak_text = [f"{g} ({m*100:.1f}%)" for g, m, _, _ in weak_groups]
+        lines.append("Svagere match: " + ", ".join(weak_text))
+
+    return "\\n\\n".join(lines)
 
 def init_state():
     if "page" not in st.session_state:
