@@ -673,6 +673,15 @@ st.markdown(
         display: none !important;
     }
 
+    /* FIX: gør selectbox tekst synlig */
+    div[data-baseweb="select"] span {
+        color: white !important;
+    }
+    
+    ul[role="listbox"] li,
+    ul[role="listbox"] li * {
+        color: white !important;
+    }
 
     .stButton > button,
     .stDownloadButton > button {
