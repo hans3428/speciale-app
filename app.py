@@ -940,6 +940,8 @@ elif st.session_state.page == "result":
     st.markdown("<br><br>", unsafe_allow_html=True)
     
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
+    
+    st.subheader("Scroll op for at se dit resultat")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -957,7 +959,7 @@ elif st.session_state.page == "result":
     why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
     st.markdown(why_text)
 
-    st.subheader("Scroll op for at se dit resultat")
+   
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
