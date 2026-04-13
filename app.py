@@ -730,7 +730,7 @@ if st.session_state.page == "intro":
 
 <div class="intro-text">Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig. Testen sammenholder dine præferencer med data om blandt andet studieform, arbejdsmarked, faglige interesser og arbejdsstil.</div>
 
-<div class="intro-text" style="margin-bottom:0;">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>
+<div class="intro-text">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>
 
 <div class="intro-text" style="margin-bottom:0;">*** OBS: Scroll selv til toppen af den næste side ved sideskift. ***</div>
 </div>
