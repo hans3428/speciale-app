@@ -346,25 +346,14 @@ def scroll_to_top():
                 window.parent.document.documentElement.scrollTop = 0;
                 window.parent.document.body.scrollTop = 0;
 
-                const all = window.parent.document.querySelectorAll("*");
-                all.forEach((el) => {
-                    const style = window.parent.getComputedStyle(el);
-                    const canScroll =
-                        (style.overflowY === "auto" || style.overflowY === "scroll") &&
-                        el.scrollHeight > el.clientHeight;
-
-                    if (canScroll) {
-                        el.scrollTop = 0;
-                    }
-                });
-
                 const selectors = [
                     '[data-testid="stAppViewContainer"]',
                     '[data-testid="stApp"]',
                     'section.main',
                     'main',
                     '.main',
-                    '.block-container'
+                    '.block-container',
+                    '[data-testid="stMainBlockContainer"]'
                 ];
 
                 selectors.forEach((selector) => {
@@ -373,14 +362,18 @@ def scroll_to_top():
                         el.scrollTop = 0;
                     }
                 });
+
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
             } catch (e) {}
         }
 
         forceScrollTop();
-        setTimeout(forceScrollTop, 50);
-        setTimeout(forceScrollTop, 150);
+        setTimeout(forceScrollTop, 100);
         setTimeout(forceScrollTop, 300);
-        setTimeout(forceScrollTop, 600);
+        setTimeout(forceScrollTop, 700);
+        setTimeout(forceScrollTop, 1200);
         </script>
         """,
         height=0,
