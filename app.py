@@ -673,31 +673,6 @@ st.markdown(
         display: none !important;
     }
 
-        /* Selectbox tekst = hvid */
-    div[data-baseweb="select"] > div {
-        background: #0f172a !important;
-        color: white !important;
-    }
-    
-    div[data-baseweb="select"] * {
-        color: white !important;
-    }
-    
-    /* Dropdown-menu */
-    ul[role="listbox"] {
-        background: #0f172a !important;
-    }
-    
-    /* Hver valgmulighed */
-    ul[role="listbox"] li {
-        color: white !important;
-        background: #0f172a !important;
-    }
-    
-    /* Hover */
-    ul[role="listbox"] li:hover {
-        background: #1e293b !important;
-    }
 
     .stButton > button,
     .stDownloadButton > button {
