@@ -931,17 +931,17 @@ elif st.session_state.page == "result":
 
     st.subheader("Undersøg en specifik linje")
 
-selected_line = st.selectbox(
-    "Vælg en linje du vil sammenligne med din profil:",
-    LINE_DF["Linje"].unique()
-)
+    selected_line = st.selectbox(
+        "Vælg en linje du vil sammenligne med din profil:",
+        LINE_DF["Linje"].unique()
+    )
 
-selected_row = LINE_DF.loc[LINE_DF["Linje"] == selected_line].iloc[0]
+    selected_row = LINE_DF.loc[LINE_DF["Linje"] == selected_line].iloc[0]
 
-st.subheader("Hvorfor passer du ikke bedre til denne linje?")
+    st.subheader("Hvorfor passer du ikke bedre til denne linje?")
 
-why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
-st.markdown(why_text)
+    why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
+    st.markdown(why_text)
 
     st.subheader("Scroll op for at se dit resultatat")
 
