@@ -122,7 +122,7 @@ GROUP_SUBTITLES = {
     "Arbejdsmarked": "Spørgsmål vedrørende arbejdsmarkedsfaktorer",
     "Studieform": "Spørgsmål vedrørende studieform",
     "Arbejdsstil – kognitiv/performance": "Spørgsmål vedrørende kognitiv arbejdsstil og performance",
-    "Arbejdsstil – social/ledelse": "Spørgsmål vedrørende social arbejdsstil og ledelse",
+    "Arbejdsstil – social/ledelse": "Spørgsmål vedrørende sociale parametre",
     "Faglige interesser": "Spørgsmål vedrørende faglige interesser",
 }
 
@@ -130,7 +130,7 @@ WEIGHT_QUESTIONS = {
     "Arbejdsmarked": "Hvor stor betydning har arbejdsmarked og karrieremuligheder for dit valg af kandidatlinje?",
     "Studieform": "I hvor høj grad prioriterer du, at studieformen passer til dine præferencer?",
     "Arbejdsstil – kognitiv/performance": "Hvor vigtigt er det for dig, at uddannelsen matcher din måde at arbejde på?",
-    "Arbejdsstil – social/ledelse": "Hvor vigtigt er det for dig, at uddannelsen matcher din sociale arbejdsstil?",
+    "Arbejdsstil – social/ledelse": "Hvor vigtigt er det for dig, at uddannelsen matcher din sociale parameterprofil?",
     "Faglige interesser": "Hvor vigtigt er det for dig, at uddannelsen matcher dine faglige interesser?",
 }
 
