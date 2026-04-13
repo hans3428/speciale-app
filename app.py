@@ -261,6 +261,48 @@ def radar_figure(user_profile: dict, line_row: pd.Series) -> go.Figure:
     )
     return fig
     
+def why_not_higher_explanation(user_profile: dict, line_row: pd.Series, group_weights: dict) -> str:
+    mismatches = []
+
+    for group in GROUPS:
+        weight = group_weights.get(group, 0)
+
+        for _, spec in GROUPS[group].items():
+            col = spec["column"]
+
+            if col in user_profile and col in line_row.index and pd.notna(line_row[col]):
+                user_val = float(user_profile[col])
+                line_val = float(line_row[col])
+                diff = abs(user_val - line_val)
+
+                mismatches.append({
+                    "group": group,
+                    "column": col,
+                    "user_val": user_val,
+                    "line_val": line_val,
+                    "diff": diff,
+                    "weighted_diff": diff * weight
+                })
+
+    if not mismatches:
+        return "Der kunne ikke identificeres tydelige forskelle."
+
+    # sorter efter største mismatch (vigtigst først)
+    mismatches_sorted = sorted(mismatches, key=lambda x: x["weighted_diff"], reverse=True)
+
+    top_issues = mismatches_sorted[:4]
+
+    text = f"Du opnår ikke et højere match med **{line_row['Linje']}** primært på grund af følgende forskelle:\n\n"
+
+    for m in top_issues:
+        text += (
+            f"- **{m['column']}** ({m['group']}): "
+            f"Din profil ({m['user_val']:.2f}) vs. linjen ({m['line_val']:.2f})\n"
+        )
+
+    text += "\nDisse forskelle trækker din samlede score ned, særligt fordi de ligger inden for områder, du selv vægter relativt højt."
+
+    return text
 
 def init_state():
     if "page" not in st.session_state:
@@ -886,6 +928,20 @@ elif st.session_state.page == "result":
     st.plotly_chart(radar_figure(user_profile, best_row), use_container_width=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
+
+    st.subheader("Undersøg en specifik linje")
+
+selected_line = st.selectbox(
+    "Vælg en linje du vil sammenligne med din profil:",
+    LINE_DF["Linje"].unique()
+)
+
+selected_row = LINE_DF.loc[LINE_DF["Linje"] == selected_line].iloc[0]
+
+st.subheader("Hvorfor passer du ikke bedre til denne linje?")
+
+why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
+st.markdown(why_text)
 
     st.subheader("Scroll op for at se dit resultatat")
 
