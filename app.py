@@ -794,7 +794,7 @@ if st.session_state.page == "intro":
 
 <div class="intro-text">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>
 
-<div class="intro-text" style="margin-bottom:0;"><strong>OBS: Scroll selv til toppen af den næste side ved sideskift.</strong></div>
+<div class="intro-text" style="margin-bottom:0;"><strong>*****OBS: Scroll selv til toppen af den næste side ved sideskift.*****</strong></div>
 </div>
 """, unsafe_allow_html=True)
 
