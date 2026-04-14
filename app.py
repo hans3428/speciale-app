@@ -786,7 +786,9 @@ if st.session_state.page == "intro":
 
 <div class="intro-text">Denne test hjælper dig med at reflektere over, hvilken cand.merc.-linje der passer bedst til dig. Testen sammenholder dine præferencer med data om blandt andet studieform, arbejdsmarked, faglige interesser og arbejdsstil.</div>
 
-<div class="intro-text">Du svarer på spørgsmål i små blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>
+<div class="intro-text">Du svarer på 20 spørgsmål i 5 blokke. Til sidst beregner appen en samlet anbefaling og viser de linjer, der matcher din profil bedst.</div>
+
+<div class="intro-text">Der indsamles ikke personoplysninger i testen, og dine svar gemmes ikke eller deles med andre. Testen anvendes udelukkende som et refleksionsværktøj for dig som bruger.</div>
 
 <div class="intro-text" style="margin-bottom:0;"><strong>*****OBS: Scroll selv til toppen af den næste side ved sideskift.*****</strong></div>
 </div>
