@@ -956,7 +956,7 @@ elif st.session_state.page == "result":
 
     selected_row = LINE_DF.loc[LINE_DF["Linje"] == selected_line].iloc[0]
 
-    st.subheader("Hvorfor passer du ikke bedre til denne linje?")
+    st.subheader("Hvorfor passer jeg ikke bedre til denne linje?")
 
     why_text = why_not_higher_explanation(user_profile, selected_row, group_weights)
     st.markdown(why_text)
